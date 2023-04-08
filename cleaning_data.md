@@ -7,9 +7,9 @@ When cleaning the dataset, I wanted to check for a range of potential data issue
 -	Outliers or extreme values
 -	Inconsistent formatting or naming conventions -->
 
-<!-- To begin to address these issues, I wanted to perform a range of data cleaning tasks, including: -->
+<!-- To begin to address these issues, I wanted to perform a range of data cleaning tasks: -->
 
-<!-- I would start by reviewing outliers, imputing NULL for missing values, and then running the following code for each integer across my tables to identify rows that are more than 3 standard deviations away from the mean. --> -->
+<!-- I started by executing statistical variance queries up to three degrees in the all_sessions table to identify outliers. I further imputed NULL for missing values. --> 
 
 WITH as_missing_values_imputed AS (
   SELECT full_visitor_id, 
@@ -68,7 +68,7 @@ SELECT full_visitor_id, product_price, zscore
 FROM zscores
 WHERE zscore > 3;
 
-<!-- No outliers returned for all_sessions - time_on_site -->
+<!-- No outliers returned for all_sessions - product_price -->
 
 WITH as_missing_values_imputed AS (
   SELECT full_visitor_id, 
@@ -91,36 +91,360 @@ WHERE zscore > 3;
 
 <!-- No outliers returned for all_sessions - page_views -->
 
+
+<!-- No outliers were found across the all_session table that warranted further investigation. Additionally, the columns total_transaction_revenue, transactions, session_quality_dim, product_refund_amount, product_quantity, product_revenue, item_quantity, transaction_revenue, transaction_id, search_keyword, and ecommerce_action_option all returned NULL values for all of their rows. Considering the goals of the data analysis, it would be appropriate to remove columns with no data that would not significantly impact the insights being sought. This would streamline the analysis and reduce the complexity of the data. -->
+
+
+
+<!-- I executed statistical variance queries up to three degrees to identify outliers in the products table.  I further imputed NULL for missing values. -->
+
 WITH as_missing_values_imputed AS (
-  SELECT full_visitor_id, 
-         product_price, 
-         AVG(product_price) OVER (PARTITION BY full_visitor_id ORDER BY product_price) as imputed_product_price
-  FROM all_sessions),
+  SELECT sku, 
+         ordered_quantity, 
+         AVG(ordered_quantity) OVER (PARTITION BY sku ORDER BY ordered_quantity) as imputed_ordered_quantity
+  FROM products),
 zscores AS (
-  SELECT full_visitor_id,
-         product_price,
+  SELECT sku,
+         ordered_quantity,
          CASE 
-           WHEN STDDEV(product_price) OVER (PARTITION BY full_visitor_id) = 0 THEN NULL 
-           ELSE (product_price - imputed_product_price) / STDDEV(product_price) OVER (PARTITION BY full_visitor_id) 
+           WHEN STDDEV(ordered_quantity) OVER (PARTITION BY sku) = 0 THEN NULL 
+           ELSE (ordered_quantity - imputed_ordered_quantity) / STDDEV(ordered_quantity) OVER (PARTITION BY sku) 
          END as zscore
   FROM as_missing_values_imputed)
-SELECT full_visitor_id, product_price, zscore
+SELECT sku, ordered_quantity, zscore
 FROM zscores
 WHERE zscore > 3;
 
-<!-- No outliers returned for all_sessions - time_on_site -->
+<!-- No outliers returned for products - ordered_quantity -->
 
-<!-- At this time, data would be either omitted or highlighterd based on the parameters of what was being asked of from a business or organization. For instance, they may decide that the outliers warrant an investigation, or missing values warrant further outreach for clarification. -->
+WITH as_missing_values_imputed AS (
+  SELECT sku, 
+         stock_level, 
+         AVG(stock_level) OVER (PARTITION BY sku ORDER BY stock_level) as imputed_stock_level
+  FROM products),
+zscores AS (
+  SELECT sku,
+         stock_level,
+         CASE 
+           WHEN STDDEV(stock_level) OVER (PARTITION BY sku) = 0 THEN NULL 
+           ELSE (stock_level - imputed_stock_level) / STDDEV(stock_level) OVER (PARTITION BY sku) 
+         END as zscore
+  FROM as_missing_values_imputed)
+SELECT sku, stock_level, zscore
+FROM zscores
+WHERE zscore > 3;
+
+<!-- No outliers returned for products - stock_level -->
+
+WITH as_missing_values_imputed AS (
+  SELECT sku, 
+         restocking_lead_time, 
+         AVG(restocking_lead_time) OVER (PARTITION BY sku ORDER BY restocking_lead_time) as imputed_restocking_lead_time
+  FROM products),
+zscores AS (
+  SELECT sku,
+         restocking_lead_time,
+         CASE 
+           WHEN STDDEV(restocking_lead_time) OVER (PARTITION BY sku) = 0 THEN NULL 
+           ELSE (restocking_lead_time - imputed_restocking_lead_time) / STDDEV(restocking_lead_time) OVER (PARTITION BY sku) 
+         END as zscore
+  FROM as_missing_values_imputed)
+SELECT sku, restocking_lead_time, zscore
+FROM zscores
+WHERE zscore > 3;
+
+<!-- No outliers returned for products - restocking_lead_time -->
+
+WITH as_missing_values_imputed AS (
+  SELECT sku, 
+         sentiment_score, 
+         AVG(sentiment_score) OVER (PARTITION BY sku ORDER BY sentiment_score) as imputed_sentiment_score
+  FROM products),
+zscores AS (
+  SELECT sku,
+         sentiment_score,
+         CASE 
+           WHEN STDDEV(sentiment_score) OVER (PARTITION BY sku) = 0 THEN NULL 
+           ELSE (sentiment_score - imputed_sentiment_score) / STDDEV(sentiment_score) OVER (PARTITION BY sku) 
+         END as zscore
+  FROM as_missing_values_imputed)
+SELECT sku, sentiment_score, zscore
+FROM zscores
+WHERE zscore > 3;
+
+<!-- No outliers returned for products - sentiment_score -->
+
+WITH as_missing_values_imputed AS (
+  SELECT sku, 
+         sentiment_magnitude, 
+         AVG(sentiment_magnitude) OVER (PARTITION BY sku ORDER BY sentiment_magnitude) as imputed_sentiment_magnitude
+  FROM products),
+zscores AS (
+  SELECT sku,
+         sentiment_magnitude,
+         CASE 
+           WHEN STDDEV(sentiment_magnitude) OVER (PARTITION BY sku) = 0 THEN NULL 
+           ELSE (sentiment_magnitude - imputed_sentiment_magnitude) / STDDEV(sentiment_magnitude) OVER (PARTITION BY sku) 
+         END as zscore
+  FROM as_missing_values_imputed)
+SELECT sku, sentiment_magnitude, zscore
+FROM zscores
+WHERE zscore > 3;
+
+<!-- No outliers returned for products - sentiment_magnitude -->
+
+<!-- No outliers were found across the products table that warranted further investigation.
+
+ <!-- I executed statistical variance queries up to three degrees to identify outliers in the sales_by_sku table.  I further imputed NULL for missing values.-->
+
+WITH as_missing_values_imputed AS (
+  SELECT product_sku, 
+         total_ordered, 
+         AVG(total_ordered) OVER (PARTITION BY product_sku ORDER BY total_ordered) as imputed_total_ordered
+  FROM sales_by_sku),
+zscores AS (
+  SELECT product_sku,
+         total_ordered,
+         CASE 
+           WHEN STDDEV(total_ordered) OVER (PARTITION BY product_sku) = 0 THEN NULL 
+           ELSE (total_ordered - imputed_total_ordered) / STDDEV(total_ordered) OVER (PARTITION BY product_sku) 
+         END as zscore
+  FROM as_missing_values_imputed)
+SELECT product_sku, total_ordered, zscore
+FROM zscores
+WHERE zscore > 3;
+
+<!-- No outliers returned for sales_by_sku - total_ordered  -->
+<!-- No outliers were found across the sales_by_sku table that warranted further investigation -->
+
+<!-- I executed statistical variance queries up to three degrees to identify outliers in the analytics table.  I further imputed NULL for missing values. -->
+
+WITH as_missing_values_imputed AS (
+  SELECT visit_id, 
+         visit_start_time, 
+         AVG(visit_start_time) OVER (PARTITION BY visit_id ORDER BY visit_start_time) as imputed_visit_start_time
+  FROM analytics),
+zscores AS (
+  SELECT visit_id,
+         visit_start_time,
+         CASE 
+           WHEN STDDEV(visit_start_time) OVER (PARTITION BY visit_id) = 0 THEN NULL 
+           ELSE (visit_start_time - imputed_visit_start_time) / STDDEV(visit_start_time) OVER (PARTITION BY visit_id) 
+         END as zscore
+  FROM as_missing_values_imputed)
+SELECT visit_id, visit_start_time, zscore
+FROM zscores
+WHERE zscore > 3;
+
+<!-- Two outliers were found in the analytics dataset under the visit_start_time variable, both corresponding to the visit_id 1495607627. These outliers were found to be duplicated. It is recommended to remove the duplicate and further investigate and potentially remove the other outlier.-->
+
+WITH as_missing_values_imputed AS (
+  SELECT visit_id, 
+        unit_price, 
+         AVG(unit_price) OVER (PARTITION BY visit_id ORDER BY unit_price) as imputed_unit_price
+  FROM analytics),
+zscores AS (
+  SELECT visit_id,
+         unit_price,
+         CASE 
+           WHEN STDDEV(unit_price) OVER (PARTITION BY visit_id) = 0 THEN NULL 
+           ELSE (unit_price - imputed_unit_price) / STDDEV(unit_price) OVER (PARTITION BY visit_id) 
+         END as zscore
+  FROM as_missing_values_imputed)
+SELECT visit_id, unit_price, zscore
+FROM zscores
+WHERE zscore > 3;
+
+<!-- 13308 data entries were found to be outliers in the analytics dataset under the unit_price variable out of the total data entries (1048575). However, it is important to note that a significant amount of duplication exists within these outliers. Further investigation is recommended to determine the root cause of these outliers, which could be either issues with the data collection process or a large amount of variation among the analyzed variable. It is also recommended to test for outliers again once the duplicates have been removed. -->
+
+<!-- The columns units_sold and revenue all returned NULL values for all of their rows. Considering the goals of the data analysis, it would be appropriate to remove columns with no data that would not significantly impact the insights being sought. This would streamline the analysis and reduce the complexity of the data. Further, the variable bounces appear to be constant. While it would be recommended to note its value, it would be better to remove it from the table to streamline the data and optimize efficiency and space. --> -->
+
+ <!--Finally, I examined the sales_report table. At first, the column titles seemed to be a duplicate of those in the previously queried products table. To investigate further, I executed a join query between these two tables -->
+
+SELECT *
+FROM products
+JOIN sales_report
+ON products.sku = sales_report.product_sku;
+
+<!-- "The query revealed that all column names, except for an extra ratio column in the sales_report table, were a match to those in the products table. To verify if the data was also duplicated, I conducted a further query to review duplication across tables." -->
+
+SELECT sku, product_name, ordered_quantity, stock_level, restocking_lead_time, sentiment_score, sentiment_magnitude
+FROM products
+EXCEPT
+SELECT product_sku, product_name, total_ordered, stock_level, restocking_leadtime, sentiment_score, sentiment_magnitude
+FROM sales_report;
+
+<!-- This revealed that there were 1009 entries within the products table that were not in the sales_report table. -->
+
+SELECT product_sku, product_name, total_ordered, stock_level, restocking_leadtime, sentiment_score, sentiment_magnitude
+FROM sales_report
+EXCEPT 
+SELECT sku, product_name, ordered_quantity, stock_level, restocking_lead_time, sentiment_score, sentiment_magnitude
+FROM products;
+
+<!-- This revealed that there were 371 entries in the sales_report table that were not in the products table. Therefore, I continued to execute statistical variance queries up to three degrees to identify outliers for all columns in the sales_report table with the expectation that i would need to review and remove duplications across the tables during the next phase of data cleaning.  -->
+
+WITH as_missing_values_imputed AS (
+  SELECT product_sku, 
+         total_ordered, 
+         AVG(total_ordered) OVER (PARTITION BY product_sku ORDER BY  total_ordered) as imputed_total_ordered
+  FROM sales_report),
+zscores AS (
+  SELECT product_sku,
+         total_ordered,
+         CASE 
+           WHEN STDDEV(total_ordered) OVER (PARTITION BY product_sku) = 0 THEN NULL 
+           ELSE (total_ordered - imputed_total_ordered) / STDDEV(total_ordered) OVER (PARTITION BY product_sku) 
+         END as zscore
+  FROM as_missing_values_imputed)
+SELECT product_sku,  total_ordered, zscore
+FROM zscores
+WHERE zscore > 3;
+
+<!-- No outliers returned for sales_report - total_ordered   -->
+
+WITH as_missing_values_imputed AS (
+  SELECT product_sku, 
+         stock_level, 
+         AVG(stock_level) OVER (PARTITION BY product_sku ORDER BY   stock_level) as imputed_stock_level
+  FROM sales_report),
+zscores AS (
+  SELECT product_sku,
+          stock_level,
+         CASE 
+           WHEN STDDEV(stock_level) OVER (PARTITION BY product_sku) = 0 THEN NULL 
+           ELSE (stock_level - imputed_stock_level) / STDDEV(stock_level) OVER (PARTITION BY product_sku) 
+         END as zscore
+  FROM as_missing_values_imputed)
+SELECT  product_sku,  stock_level, zscore
+FROM zscores
+WHERE zscore > 3;
+
+<!-- No outliers returned for sales_report - stock_level -->
+
+WITH as_missing_values_imputed AS (
+  SELECT product_sku, 
+         restocking_leadtime, 
+         AVG(restocking_leadtime) OVER (PARTITION BY product_sku ORDER BY restocking_leadtime) as imputed_restocking_leadtime
+  FROM sales_report),
+zscores AS (
+  SELECT product_sku,
+          restocking_leadtime,
+         CASE 
+           WHEN STDDEV(restocking_leadtime) OVER (PARTITION BY product_sku) = 0 THEN NULL 
+           ELSE (restocking_leadtime - imputed_restocking_leadtime) / STDDEV(restocking_leadtime) OVER (PARTITION BY product_sku) 
+         END as zscore
+  FROM as_missing_values_imputed)
+SELECT  product_sku,  restocking_leadtime, zscore
+FROM zscores
+WHERE zscore > 3;
+<!-- No outliers returned for sales_report - restocking_leadtime -->
+
+WITH as_missing_values_imputed AS (
+  SELECT product_sku, 
+         sentiment_score, 
+         AVG(sentiment_score) OVER (PARTITION BY product_sku ORDER BY  sentiment_score) as imputed_sentiment_score
+  FROM sales_report),
+zscores AS (
+  SELECT product_sku,
+         sentiment_score,
+         CASE 
+           WHEN STDDEV( sentiment_score) OVER (PARTITION BY product_sku) = 0 THEN NULL 
+           ELSE (sentiment_score - imputed_sentiment_score) / STDDEV(sentiment_score) OVER (PARTITION BY product_sku) 
+         END as zscore
+  FROM as_missing_values_imputed)
+SELECT  product_sku, sentiment_score, zscore
+FROM zscores
+WHERE zscore > 3;
+
+<!-- No outliers returned for sales_report - sentiment_score -->
+
+WITH as_missing_values_imputed AS (
+  SELECT product_sku, 
+         sentiment_magnitude, 
+         AVG(sentiment_magnitude) OVER (PARTITION BY product_sku ORDER BY  sentiment_magnitude) as imputed_sentiment_magnitude
+  FROM sales_report),
+zscores AS (
+  SELECT product_sku,
+         sentiment_magnitude,
+         CASE 
+           WHEN STDDEV(sentiment_magnitude) OVER (PARTITION BY product_sku) = 0 THEN NULL 
+           ELSE (sentiment_magnitude - imputed_sentiment_magnitude) / STDDEV(sentiment_magnitude) OVER (PARTITION BY product_sku) 
+         END as zscore
+  FROM as_missing_values_imputed)
+SELECT  product_sku, sentiment_magnitude, zscore
+FROM zscores
+WHERE zscore > 3;
+
+<!-- No outliers returned for sales_report - sentiment_magnitude -->
+
+WITH as_missing_values_imputed AS (
+  SELECT product_sku, 
+         ratio, 
+         AVG(ratio) OVER (PARTITION BY product_sku ORDER BY  ratio) as imputed_ratio
+  FROM sales_report),
+zscores AS (
+  SELECT product_sku,
+         ratio,
+         CASE 
+           WHEN STDDEV(ratio) OVER (PARTITION BY product_sku) = 0 THEN NULL 
+           ELSE (ratio - imputed_ratio) / STDDEV(ratio) OVER (PARTITION BY product_sku) 
+         END as zscore
+  FROM as_missing_values_imputed)
+SELECT  product_sku, ratio, zscore
+FROM zscores
+WHERE zscore > 3;
+
+<!-- No outliers returned for sales_report - ratio. This is the only non-duplicated variable across the products and sales_report tables. -->
+
+<!-- The next step in the cleaning process is to remove non-significant variables with empty rows that cannot be calculated using available information. It is difficult to determine which rows should be calculated without knowing the purpose of the analysis or whether it's appropriate to request additional data from participants. 
+
+As noted earlier, the variables total_transaction_revenue, transactions, session_quality_dim, product_refund_amount, product_quantity, product_revenue, item_revenue, item_quantity, transaction_revenue, transaction_id, search_keyword, and ecommerce_action_option from the all_sessions table appear to returned NULL values for all of their rows. Additionally, the variables units_sold and revenue from the analytics dataset also returned NULL values for all of their rows. This was confirmed with the following queries below: -->
+
+SELECT 'total_transaction_revenue' AS column_name, COUNT(DISTINCT total_transaction_revenue) AS distinct_count FROM all_sessions
+UNION ALL
+SELECT 'transactions' AS column_name, COUNT(DISTINCT transactions) AS distinct_count FROM all_sessions
+UNION ALL
+SELECT 'session_quality_dim' AS column_name, COUNT(DISTINCT session_quality_dim) AS distinct_count FROM all_sessions
+UNION ALL
+SELECT 'product_refund_amount' AS column_name, COUNT(DISTINCT product_refund_amount) AS distinct_count FROM all_sessions
+UNION ALL
+SELECT 'product_quantity' AS column_name, COUNT(DISTINCT product_quantity) AS distinct_count FROM all_sessions
+UNION ALL
+SELECT 'product_revenue' AS column_name, COUNT(DISTINCT product_revenue) AS distinct_count FROM all_sessions
+UNION ALL
+SELECT 'item_revenue' AS column_name, COUNT(DISTINCT item_revenue) AS distinct_count FROM all_sessions
+UNION ALL
+SELECT 'item_quantity' AS column_name, COUNT(DISTINCT item_quantity) AS distinct_count FROM all_sessions
+UNION ALL
+SELECT 'transaction_revenue' AS column_name, COUNT(DISTINCT transaction_revenue) AS distinct_count FROM all_sessions
+UNION ALL
+SELECT 'transaction_id' AS column_name, COUNT(DISTINCT transaction_id) AS distinct_count FROM all_sessions
+UNION ALL
+SELECT 'search_keyword' AS column_name, COUNT(DISTINCT search_keyword) AS distinct_count FROM all_sessions
+UNION ALL
+SELECT 'ecommerce_action_option' AS column_name, COUNT(DISTINCT ecommerce_action_option) AS distinct_count FROM all_sessions;
 
 
--	Removing rows or columns with missing or incomplete data.
--	Removing duplicate entries.
--	Converting data types to the appropriate formats (i.e. converting certain numbers to strings – such as phone numbers ).
--	Standardizing formatting or naming conventions (i.e. using M.
+
+ <!-- The result showed five of the variables returned all NULL values. Since attempting to calculate these row values could potentially introduce additional errors or biases, I decided to remove them from the table using the DROP COLUMN query However, if an organization or business indicates that these rows are important, a different decision to calculate or retrieve this information may be more appropriate. -->
+
+ALTER TABLE all_sessions 
+    DROP COLUMN transactions, 
+    DROP COLUMN product_refund_amount, 
+    DROP COLUMN item_revenue,
+    DROP COLUMN item_quantity, 
+    DROP COLUMN search_keyword
 
 
 
 
+Further, the variable bounces appear to be constant. I confirmed this by running the query below.
 
-Queries:
-Below, provide the SQL queries you used to clean your data.
+SELECT COUNT(DISTINCT bounces)
+FROM analytics;
+
+It confirmed that the column was constant, and I therefore dropped it from the dataset.
+
+ALTER TABLE analytics
+    DROP COLUMN bounces
