@@ -257,16 +257,16 @@ WHERE zscore > 3;
 
 <!-- 13308 data entries were found to be outliers in the analytics dataset under the unit_price variable out of the total data entries (1048575). However, it is important to note that a significant amount of duplication exists within these outliers. Further investigation is recommended to determine the root cause of these outliers, which could be either issues with the data collection process or a large amount of variation among the analyzed variable. It is also recommended to test for outliers again once the duplicates have been removed. -->
 
-<!-- The columns units_sold and revenue all returned NULL values for all of their rows. Considering the goals of the data analysis, it would be appropriate to remove columns with no data that would not significantly impact the insights being sought. This would streamline the analysis and reduce the complexity of the data. Further, the variable bounces appear to be constant. While it would be recommended to note its value, it would be better to remove it from the table to streamline the data and optimize efficiency and space. --> -->
+<!-- The columns units_sold and revenue all returned NULL values for all of their rows. Considering the goals of the data analysis, it would be appropriate to remove columns with no data that would not significantly impact the insights being sought. This would streamline the analysis and reduce the complexity of the data. Further, the variable bounces appear to be constant. While it would be recommended to note its value, it would be better to remove it from the table to streamline the data and optimize efficiency and space. --> 
 
- <!--Finally, I examined the sales_report table. At first, the column titles seemed to be a duplicate of those in the previously queried products table. To investigate further, I executed a join query between these two tables -->
+ <!-- Finally, I examined the sales_report table. At first, the column titles seemed to be a duplicate of those in the previously queried products table. To investigate further, I executed a join query between these two tables  -->
 
 SELECT *
 FROM products
 JOIN sales_report
 ON products.sku = sales_report.product_sku;
 
-<!-- "The query revealed that all column names, except for an extra ratio column in the sales_report table, were a match to those in the products table. To verify if the data was also duplicated, I conducted a further query to review duplication across tables." -->
+<!-- "The query revealed that all column names, except for an extra ratio column in the sales_report table, were a match to those in the products table. To verify if the data was also duplicated, I conducted a further query to review duplication across tables."
 
 SELECT sku, product_name, ordered_quantity, stock_level, restocking_lead_time, sentiment_score, sentiment_magnitude
 FROM products
@@ -425,8 +425,6 @@ SELECT 'search_keyword' AS column_name, COUNT(DISTINCT search_keyword) AS distin
 UNION ALL
 SELECT 'ecommerce_action_option' AS column_name, COUNT(DISTINCT ecommerce_action_option) AS distinct_count FROM all_sessions;
 
-
-
  <!-- The result showed five of the variables returned all NULL values. Since attempting to calculate these row values could potentially introduce additional errors or biases, I decided to remove them from the table using the DROP COLUMN query However, if an organization or business indicates that these rows are important, a different decision to calculate or retrieve this information may be more appropriate. -->
 
 ALTER TABLE all_sessions 
@@ -436,7 +434,26 @@ ALTER TABLE all_sessions
     DROP COLUMN item_quantity, 
     DROP COLUMN search_keyword
 
+The other variables had distinct values as follows: total_transaction_revenue (73), session_quality_dim (44), product_quantity (8), product_revenue (4), transaction_revenue (4), transaction_id (9),  ecommerce_action_option (3). I subsequently ran a COUNT IF NULL query to see the amount of NULL caterogies.
 
+SELECT 
+    COUNT(*) - COUNT(total_transaction_revenue) AS null_total_transaction_revenue,
+    COUNT(*) - COUNT(transactions) AS null_transactions,
+    COUNT(*) - COUNT(session_quality_dim) AS null_session_quality_dim,
+    COUNT(*) - COUNT(product_refund_amount) AS null_product_refund_amount,
+    COUNT(*) - COUNT(product_quantity) AS null_product_quantity,
+    COUNT(*) - COUNT(product_revenue) AS null_product_revenue,
+    COUNT(*) - COUNT(item_quantity) AS null_item_quantity,
+    COUNT(*) - COUNT(transaction_revenue) AS null_transaction_revenue,
+    COUNT(*) - COUNT(transaction_id) AS null_transaction_id,
+    COUNT(*) - COUNT(search_keyword) AS null_search_keyword,
+    COUNT(*) - COUNT(ecommerce_action_option) AS null_ecommerce_action_option
+FROM all_sessions;
+
+
+The query showed the number of NULL rows over 15,134 rows for each variable as follows total_transaction_revenue (15,053), session_quality_dim (13,096), product_quantity (15,081), product_revenue (15,130), transaction_revenue (15,130), transaction_id (15,125),  ecommerce_action_option (15,103). The high number of NULL values across each of these variables makes the data incomplete, and would mean that analysis would likely not show a accurate representation of the data. Therefore, I decided to remove them from the table using a DROP COLUMN query. I would recomend notating the removal of these variables, and looking into data collection methods to determine why so little data was collected for these variables, so that it can be recollected if desired for future analysis.
+
+After running the query, it was evident that a high number of NULL values were present in each of the variables. The NULL values were observed across the following variables: total_transaction_revenue (15,053/15,134 rows), session_quality_dim (13,096/15,134 rows), product_quantity (15,081/15,134 rows), product_revenue (15,130/15,134 rows), transaction_revenue (15,130/15,134 rows), transaction_id (15,125/15,134 rows), and ecommerce_action_option (15,103/15,134 rows), making the data incomplete. Removing these variables using a DROP COLUMN query was deemed appropriate as their presence would have affected the accuracy of the analysis. It is recommended to document the removal of these variables and investigate the data collection methods to understand why so little data was collected for these variables. This understanding can aid in the recollection of these variables if desired for future analysis.
 
 
 Further, the variable bounces appear to be constant. I confirmed this by running the query below.
