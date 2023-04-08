@@ -541,3 +541,16 @@ SELECT DISTINCT * FROM sales_report;
 DROP TABLE sales_report;
 
 ALTER TABLE new_sales_report RENAME TO sales_report;
+
+
+------------------------------------------------------------------------------------------------------
+<!-- The next step in the cleaning process is to fix any incorrect data types. From a current review there are some numbers that appear with a scientific notation, such as numbers the full_visitor_id numbers under the all_sessions and table -->
+
+
+SELECT CAST(full_visitor_id AS BIGINT) AS full_visitor_id
+FROM YourTable;
+
+SELECT *
+FROM all_sessions
+JOIN analytics
+ON all_sessions.full_visitor_id = analytics.full_visitor_id;
