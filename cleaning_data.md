@@ -1,10 +1,10 @@
 <!-- What issues will you address by cleaning the data?
 When cleaning the dataset, I wanted to check for a range of potential data issues including:
 
--	Missing or incomplete data
+-	Outliers or extreme values
+-   Missing or incomplete data
 -	Duplicate entries
 -	Incorrect data types
--	Outliers or extreme values
 -	Inconsistent formatting or naming conventions -->
 
 --------------------------------------------------------------------------------------------------------
@@ -485,7 +485,7 @@ SELECT 'user_id' AS user_id, COUNT(DISTINCT user_id) AS distinct_count FROM anal
 UNION ALL
 SELECT 'time_on_site' AS time_on_site, COUNT(DISTINCT time_on_site) AS distinct_count FROM analytics;
 
-The bounce column returned no unique values, which confirmed it was a constant variable. I therefore will remove it from the dataset. If important, the variable bounce should be noted either in a dataset description or the title of the chart. I will further remove the user_id variable as all returned variables showed as NULL. The other variables had distinct values as follows: revenue (1831), session_quality_dim (69). I will subsequently run a COUNT IF NULL query on the two variables to see the amount of NULL entries.
+<!-- The bounce column returned no unique values, which confirmed it was a constant variable. I therefore will remove it from the dataset. If important, the variable bounce should be noted either in a dataset description or the title of the chart. I will further remove the user_id variable as all returned variables showed as NULL. The other variables had distinct values as follows: revenue (1831), session_quality_dim (69). I will subsequently run a COUNT IF NULL query on the two variables to see the amount of NULL entries. -->
 
 SELECT 
     COUNT(*) - COUNT(units_sold) AS null_units_sold,        
@@ -493,12 +493,51 @@ SELECT
     COUNT(*) - COUNT(time_on_site) AS null_time_on_site					
 FROM analytics;
 
-After running the query, it was evident that a high number of NULL values were present in both the units_sold and revenue variables. The NULL values were observed as follows: revenue (1044890/ 1048575 rows) and units_sold (1026595/1048575 rows). The high number of NULL values across both variables makes this data incomplete. Therefore, they were also removed using a DROP COLUMN function. The time_on_site variable had a lot less NULL values (120993/1048575), therefore it is recomended to keep NULL in place of missing values. However, to also look into the data collection process to see why this question is less frequently answered. 
+<!-- After running the query, it was evident that a high number of NULL values were present in both the units_sold and revenue variables. The NULL values were observed as follows: revenue (1044890/ 1048575 rows) and units_sold (1026595/1048575 rows). The high number of NULL values across both variables makes this data incomplete. Therefore, they were also removed using a DROP COLUMN function. The time_on_site variable had a lot less NULL values (120993/1048575), therefore it is recomended to keep NULL in place of missing values. However, to also look into the data collection process to see why this question is less frequently answered.  -->
 
 ALTER TABLE analytics
     DROP COLUMN bounces
     DROP COLUMN
     DROP COLUMN
 
-    -----------------------------------------------------------------------------------------------------
-    
+ --------------------------------------------------------------------------------------------------------
+<!-- The next step in the cleaning process is to remove all duplicates across each dataset. Using three commands CREATE TABLE with SELECT DISTINCT, DROP TABLE, and ALTER TABLE.  -->
+
+CREATE TABLE new_all_sessions AS
+SELECT DISTINCT * FROM all_sessions;
+
+DROP TABLE all_sessions;
+
+ALTER TABLE new_all_sessions RENAME TO all_sessions;
+
+
+CREATE TABLE new_analytics AS
+SELECT DISTINCT * FROM analytics;
+
+DROP TABLE analytics;
+
+ALTER TABLE new_analytics RENAME TO analytics;
+
+
+CREATE TABLE new_products AS
+SELECT DISTINCT * FROM products;
+
+DROP TABLE products;
+
+ALTER TABLE new_products RENAME TO products;
+
+
+CREATE TABLE new_sales_by_sku AS
+SELECT DISTINCT * FROM sales_by_sku;
+
+DROP TABLE sales_by_sku;
+
+ALTER TABLE new_sales_by_sku RENAME TO sales_by_sku;
+
+
+CREATE TABLE new_sales_report AS
+SELECT DISTINCT * FROM sales_report;
+
+DROP TABLE sales_report;
+
+ALTER TABLE new_sales_report RENAME TO sales_report;
