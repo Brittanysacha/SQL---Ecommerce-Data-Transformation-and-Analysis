@@ -554,3 +554,8 @@ SELECT *
 FROM all_sessions
 JOIN analytics
 ON all_sessions.full_visitor_id = analytics.full_visitor_id;
+
+
+FIX unit price under analytics
+UPDATE analytics
+SET unit_price = unit_price / 1000000;
