@@ -28,7 +28,25 @@ FROM all_sessions
 GROUP BY all_sessions.country
 ORDER BY revenue DESC;
 
+OR
 
+SELECT all_sessions.city, 
+	SUM((all_sessions.product_price/1000000) * sales_report.total_ordered) AS revenue
+FROM all_sessions 
+	JOIN sales_report ON all_sessions.product_SKU = sales_report.product_SKU
+WHERE all_sessions.city IS NOT NULL
+	AND all_sessions.city != 'not available in demo dataset' 
+GROUP BY all_sessions.city
+ORDER BY revenue DESC;
+
+SELECT all_sessions.country, 
+	SUM((all_sessions.product_price/1000000) * sales_report.total_ordered) AS revenue
+FROM all_sessions 
+	JOIN sales_report ON all_sessions.product_SKU = sales_report.product_SKU
+WHERE all_sessions.country IS NOT NULL
+	AND all_sessions.country != 'not available in demo dataset' 
+GROUP BY all_sessions.country
+ORDER BY revenue DESC;
 
 Answer: 
 United States - $6,032,642.25
@@ -40,6 +58,8 @@ Mountain View - $1,039,252.88
 
 SQL Queries:
 
+<!-- Query for average products ordered from visitors in each city -->
+
 SELECT all_sessions.city, 
 	AVG(sales_report.total_ordered) AS products_ordered
 FROM all_sessions 
@@ -49,6 +69,7 @@ FROM all_sessions
 GROUP BY all_sessions.city
 ORDER BY products_ordered DESC;
 
+<!-- Query for average products ordered from visitors in each city -->
 SELECT all_sessions.country, 
 	SUM(sales_report.total_ordered * analytics.unit_price) AS revenue
 FROM all_sessions 
@@ -242,9 +263,103 @@ Tunisia, 0
 **Question 3: Is there any pattern in the types (product categories) of products ordered from visitors in each city and country?**
 
 
+Queries
+SELECT
+  CASE 
+    WHEN country IN ('Canada', 'Mexico', 'United States') THEN 'North America'
+    WHEN country IN ('Brazil', 'Argentina', 'Chile', 
+					 'Columbia', 'Venezuela', 'Peru') THEN 'South America'
+    WHEN country IN ('Belize', 'Costa Rica', 'El Salvador', 
+					 'Guatemala', 'Honduras', 'Nicaragua',
+					 'Panama', 'Bahamas', 'Barbados',
+					 'Cuba', 'Dominican Republic', 'Grenada', 
+					 'Haiti', 'Jamaica', 'Sint Maarten',
+					 'Trinidad & Tobago') THEN 'Central America' 
+    WHEN country IN ('France', 'Germany', 'United Kingdom',
+					 'Belgium', 'Austria', 'Spain'
+					'Italy', 'Ireland', 'Switzerland',
+					 'Hungary', 'Russia', 'Ukraine', 
+					 'Romania', 'Lithuania', 'Latvia',
+					 'Greece', 'Gibraltar', 'Serbia',
+					 'Netherlands', 'Denmark', 'Portugal',
+					 'Finland', 'Estonia', 'Croatia', 
+					 'Slovakia', 'Sweden', 'Georgia'
+					 'San Marino') THEN 'Europe'
+    WHEN country IN ('Japan', 'China', 'India', 
+					 'Indonesia', 'Taiwan', 'Israel', 
+					 'Malyasia', 'Singapore', 'Pakistan'
+					 'Vietnam', 'Phillipines', 'Thailand', 
+					 'Laos', 'Hong Kong', 'Nepal', 
+					 'South Korea', 'Sri Lanka', 'Iraq',
+					 'Bahrain', 'Reunion') THEN 'Asia-Pacific'
+    WHEN country IN ('Morocco', 'Tanzania', 'Mauritius',
+					 'South Africa', 'Cote dIvoire', 'Tunisia') THEN 'Africa'
+    WHEN country IN ('Australia', 'New Zealand', 'Fiji') THEN 'Oceania'
+    ELSE 'Other' 
+  END AS region,
+  products.product_name,
+  SUM(sales_report.total_ordered) AS "total_products",
+  COUNT(*) AS total_orders
+FROM all_sessions 
+  JOIN sales_report ON all_sessions.product_SKU = sales_report.product_SKU
+  JOIN analytics ON all_sessions.full_visitor_id = analytics.full_visitor_id 
+      AND all_sessions.visit_id = analytics.visit_id
+  JOIN products ON products.sku = sales_report.product_SKU
+WHERE all_sessions.country IS NOT NULL
+      AND all_sessions.country != 'not available in demo dataset' 
+GROUP BY region, products.product_name
+ORDER BY region, total_products DESC, products.product_name;
 
+SELECT
+  CASE 
+    WHEN city IN ('Sacramento', 'Toronto', 'Chicago',
+				  'Los Angeles', 'Santa Fe', 'Cupertino',
+				  'Calgary', 'Palo Alto', 'Vancouver'
+				  'San Francisco', 'Detroit', 'San Bruno',
+				  'Ann Arbor', 'Houston', 'Pittsburgh',
+				  'Sunnyvale', 'New York', 'Irvine',
+				  'San Jose', 'Atlanta', 'Kirkland',
+				  'South San Francisco', 'Jacksonville',
+				  'Dallas', 'San Antonio', 'Orlando',
+				  'Philadelphia', 'Milpitas', 'Oakland') THEN 'North America'
+    WHEN city IN ('Rio de Janeiro', 'Bogota', 'Buenos Aires',
+				  'Sao Paulo', 'Rosario', 'La Victoria') THEN 'South America'
+    WHEN city IN ('Barcelona', 'Rome', 'Dublin',
+				  'Munich', 'Berlin', 'Tel Aviv-Yafo',
+				  'Stockholm', 'Paris', 'London',
+				  'Warsaw', 'Amsterdam', 'Hamburg',
+				  'Bratislava', 'Prague', 'Zurich',
+				  'Istanbul') THEN 'Europe'
+    WHEN city IN ('Shinjuku', 'Zhongli District', 'Hyderabad',
+				  'Chennai', 'Kuala Lumpur', 'Ipoh',
+				  'Jaipur', 'Pune', 'Bangkok',
+				  'Minato', 'Seoul') THEN 'Asia-Pacific'
+    WHEN city IN ('Melbourne', 'Brisbane', 'Sydney') THEN 'Oceania'
+    ELSE 'Other' 
+  END AS region,
+  products.product_name,
+  SUM(sales_report.total_ordered) AS "total_products",
+  COUNT(*) AS total_orders
+FROM all_sessions 
+  JOIN sales_report ON all_sessions.product_SKU = sales_report.product_SKU
+  JOIN analytics ON all_sessions.full_visitor_id = analytics.full_visitor_id 
+      AND all_sessions.visit_id = analytics.visit_id
+  JOIN products ON products.sku = sales_report.product_SKU
+WHERE all_sessions.city IS NOT NULL
+      AND all_sessions.city != 'not available in demo dataset' 
+GROUP BY region, products.product_name
+ORDER BY region, total_products DESC, products.product_name;
 
 Answer:
+- The most popular product in the African region was the  Learning Thermostat 3rd Gen-USA - Stainless Steel (282 sold).
+- The most popular product among Asia-Pacific countries was the  17oz Stainless Steel Sport Bottle (7348 sold). 
+- The most popular product among Central American countries was the  blackout cap (1701 sold).  
+- The most popular product among European countries was the  Foam Can and Bottle Cooler (10879 sold).
+- The most popular product among North American countries was the  17oz Stainless Steel Sport Bottle (36740 sold). 
+The most popular product among oceanic countries was the Protect smoke + CO White Wired Alarm USA (882 sold).
+The most popular product among South American countries was the SPF-15 Slim & Slender Lip Balm
+- There is not any data collected on African cities.
+
 
 
 
@@ -682,4 +797,6 @@ SQL Queries:
 
 
 Answer:
+
+
 
