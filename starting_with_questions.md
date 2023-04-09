@@ -35,8 +35,6 @@ United States - $6,032,642.25
 Mountain View - $1,039,252.88
 
 
-
-
 **Question 2: What is the average number of products ordered from visitors in each city and country?**
 
 
@@ -243,8 +241,6 @@ Tunisia, 0
 
 **Question 3: Is there any pattern in the types (product categories) of products ordered from visitors in each city and country?**
 
-
-SQL Queries:
 
 
 
