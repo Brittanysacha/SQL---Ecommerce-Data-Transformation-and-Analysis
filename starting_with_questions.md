@@ -264,6 +264,7 @@ Tunisia, 0
 
 
 Queries
+<!-- Query for top types of product/country -->
 SELECT
   CASE 
     WHEN country IN ('Canada', 'Mexico', 'United States') THEN 'North America'
@@ -310,6 +311,7 @@ WHERE all_sessions.country IS NOT NULL
 GROUP BY region, products.product_name
 ORDER BY region, total_products DESC, products.product_name;
 
+<!-- Query for top types of product/city -->
 SELECT
   CASE 
     WHEN city IN ('Sacramento', 'Toronto', 'Chicago',
@@ -321,19 +323,61 @@ SELECT
 				  'San Jose', 'Atlanta', 'Kirkland',
 				  'South San Francisco', 'Jacksonville',
 				  'Dallas', 'San Antonio', 'Orlando',
-				  'Philadelphia', 'Milpitas', 'Oakland') THEN 'North America'
+				  'Philadelphia', 'Milpitas', 'Oakland',
+                  'Salem', 'Santa Clara', 'Mountain View'
+                  'Waterloo', 'South San Francisco', 'Fort Worth',
+                  'Austin', 'LaFayette', 'Washington',
+                  'Bellingham', 'Cupertino', 'San Antonio',
+                  'Greer', 'Dallas', 'Jacksonville',
+                  'Burnaby', 'Ashburn', 'Rexburg',
+                  'Bellflower', 'Council Bluffs', 'Pleasanton',
+                  'Chicago', 'Houston', 'Portland',
+                  'Menlo Park', 'Piscataway Township', 'Westville',
+                   'South El Monte', 'Indianapolis', 'Johnson City',
+                   'Kitchener') THEN 'North America'
     WHEN city IN ('Rio de Janeiro', 'Bogota', 'Buenos Aires',
-				  'Sao Paulo', 'Rosario', 'La Victoria') THEN 'South America'
+				  'Sao Paulo', 'Rosario', 'La Victoria'
+                  'Maracaibo', 'Rosario', 'Buenos Aires',
+                  'Belo Horizonte', 'Odessa', 'Santa Clara',
+                  'Sao Paulo', 'Fortaleza', 'Ama') THEN 'South America'
+    WHEN city IN ('Panama City') THEN 'Central America'
     WHEN city IN ('Barcelona', 'Rome', 'Dublin',
 				  'Munich', 'Berlin', 'Tel Aviv-Yafo',
 				  'Stockholm', 'Paris', 'London',
 				  'Warsaw', 'Amsterdam', 'Hamburg',
 				  'Bratislava', 'Prague', 'Zurich',
-				  'Istanbul') THEN 'Europe'
+				  'Istanbul', 'Moscow', 'Saint Petersburg'
+                  'Sherbrooke', 'Stuttgart', 'Belgrade',
+                  'Quimper', 'Wroclaw', 'Brussels',
+                  'East Lansing', 
+                  'Kiev', 'Zagreb', 'Budapest', 
+                  'Villeneuve-d'Ascq', 'Stockholm', 
+                  'Moscow', 'Wrexham', 'Cluj-Napoca', 
+                  'Nice', 'Coventry', 'Courbevoie', 
+                  'Egham', 'Copenhagen', 'Oslo', 
+                  'Frankfurt', 'Barcelona', 'Edinburgh', 
+                  'Rotterdam', 'Amsterdam', 'Iasi', 
+                  'Oviedo', 'Vienna', 'Rome', 
+                  'Salford', 'Lisbon', 'Marlboro', 
+                  'Ghent', 'Chico', 'Milan', 
+                  'Poznan', 'Thessaloniki', 'Pozuelo de Alarcon', 
+                  'Glasgow', 'Montreuil', 'Helsinki',
+                  'Dublin', 'Marseille') THEN 'Europe'
     WHEN city IN ('Shinjuku', 'Zhongli District', 'Hyderabad',
 				  'Chennai', 'Kuala Lumpur', 'Ipoh',
 				  'Jaipur', 'Pune', 'Bangkok',
-				  'Minato', 'Seoul') THEN 'Asia-Pacific'
+				  'Minato', 'Seoul', 'Tel Aviv-Yafo' 
+                  'Taguig', 'Kharagpur', 'Izmir', 
+                  'Riyadh', 'Petaling Jaya', 'Singapore', 
+                  'Hanoi', 'Manila', 'Quezon City', 
+                  'Gurgaon', 'Antwerp', 'Vladivostok',
+                  'Chiyoda', 'Longtan District', 'Salem',
+                   'Jaipur', 'Ipoh', 'Karachi', 
+                   'Kolkata', 'La Victoria', 'Medellin',
+                   'Osaka', 'Lucknow', 'Belgrade', 
+                   'Vilnius', 'Doha', 'Hong Kong',
+                    'Lahore', 'Sapporo') THEN 'Asia-Pacific'
+    WHEN city IN ('Cape Town') THEN 'Africa'
     WHEN city IN ('Melbourne', 'Brisbane', 'Sydney') THEN 'Oceania'
     ELSE 'Other' 
   END AS region,
@@ -351,14 +395,16 @@ GROUP BY region, products.product_name
 ORDER BY region, total_products DESC, products.product_name;
 
 Answer:
-- The most popular product in the African region was the  Learning Thermostat 3rd Gen-USA - Stainless Steel (282 sold).
-- The most popular product among Asia-Pacific countries was the  17oz Stainless Steel Sport Bottle (7348 sold). 
-- The most popular product among Central American countries was the  blackout cap (1701 sold).  
-- The most popular product among European countries was the  Foam Can and Bottle Cooler (10879 sold).
-- The most popular product among North American countries was the  17oz Stainless Steel Sport Bottle (36740 sold). 
-The most popular product among oceanic countries was the Protect smoke + CO White Wired Alarm USA (882 sold).
-The most popular product among South American countries was the SPF-15 Slim & Slender Lip Balm
-- There is not any data collected on African cities.
+- The Learning Thermostat 3rd Gen-USA - Stainless Steel was the most popular product among countries in the African region, with 282 units sold.
+- The blackout cap was the most popular product among countries in the Central American region, with 1701 units sold.
+- The Foam Can and Bottle Cooler was the most popular product among countries in the European region, with 10879 units sold.
+
+- The 17oz Stainless Steel Sport Bottle was the most popular product among countries in the North American region, with 36740 units sold.
+
+- The Protect smoke + CO White Wired Alarm USA was the most popular product among countries in the oceanic region, with 882 units sold.
+
+- The SPF-15 Slim & Slender Lip Balm was the most popular product among countries in the South American region, with the actual number of units sold not mentioned.
+- There is not any data collected on African or central american cities, this could be due to size or population of those given regions, or a lack of orders. Adding data from these cities, is something to consider to have a more complete dataset .
 
 
 
