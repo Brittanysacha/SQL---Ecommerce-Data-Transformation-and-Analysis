@@ -42,10 +42,201 @@ Mountain View - $1,039,252.88
 
 SQL Queries:
 
+SELECT all_sessions.city, 
+	AVG(sales_report.total_ordered) AS products_ordered
+FROM all_sessions 
+	JOIN sales_report ON all_sessions.product_SKU = sales_report.product_SKU
+	JOIN analytics ON all_sessions.full_visitor_id = analytics.full_visitor_id 
+		AND all_sessions.visit_id = analytics.visit_id
+GROUP BY all_sessions.city
+ORDER BY products_ordered DESC;
 
+SELECT all_sessions.country, 
+	SUM(sales_report.total_ordered * analytics.unit_price) AS revenue
+FROM all_sessions 
+	JOIN sales_report ON all_sessions.product_SKU = sales_report.product_SKU
+	JOIN analytics ON all_sessions.full_visitor_id = analytics.full_visitor_id 
+		AND all_sessions.visit_id = analytics.visit_id
+	WHERE all_sessions.country IS NOT NULL
+		   AND all_sessions.country != 'not available in demo dataset' 
+GROUP BY all_sessions.country
+ORDER BY products_ordered DESC;
 
 Answer:
 
+Below is a list of the average number of products ordered from visitors in each city:
+
+Sacramento, 189.00
+Rio de Janeiro, 189.00
+Shinjuku, 178.70
+Toronto, 102.06
+Barcelona, 73.10
+Chicago, 65.03
+Los Angeles, 63.02
+Santa Fe, 60.00
+Rome, 53.00
+Bogota, 45.21
+Cupertino, 42.00
+Dublin, 39.52
+Calgary, 39.00
+Palo Alto, 38.77
+Vancouver, 37.00
+Zhongli District, 34.50
+Munich, 30.87
+Hyderabad, 29.31
+Melbourne, 26.71
+San Francisco, 23.29
+Berlin, 23.11
+Detroit, 23.00
+San Bruno, 22.50
+(not set), 22.08
+Osaka, 21.43
+Mountain View, 21.39
+not available in demo dataset, 20.22
+Chennai, 20.15
+Houston, 20.09
+Ann Arbor, 20.02
+Austin, 17.83
+Tel Aviv-Yafo, 17.70
+Pittsburgh, 16.85
+Buenos Aires, 16.00
+Sao Paulo, 15.00
+Sunnyvale, 14.56
+New York, 14.36
+Irvine, 13.93
+San Jose, 13.15
+Kuala Lumpur, 13.00
+Atlanta, 12.76
+Jakarta, 12.21
+London, 12.16
+Kirkland, 12.00
+Ipoh, 11.00
+South San Francisco, 11.00
+Stockholm, 9.20
+Brisbane, 9.00
+Colombo, 9.00
+Redmond, 9.00
+Seattle, 7.70
+Paris, 7.66
+Washington, 7.65
+Madrid, 7.50
+San Diego, 7.00
+Jaipur, 7.00
+East Lansing, 7.00
+Santa Clara, 6.62
+Pune, 6.50
+Warsaw, 6.19
+Mexico City, 6.12
+Singapore, 6.10
+Helsinki, 6.00
+Montreal, 6.00
+Bangkok, 5.14
+Jacksonville, 5.00
+Hong Kong, 4.98
+Cambridge, 4.83
+Minato, 4.40
+Seoul, 4.05
+Dallas, 4.00
+Tempe, 3.81
+San Antonio, 2.00
+Orlando, 2.00
+Amsterdam, 2.00
+Kolkata, 2.00
+Hamburg, 2.00
+Bengaluru, 1.71
+Philadelphia, 1.26
+Milpitas, 1.00
+Rosario, 1.00
+Sydney, 0.61
+Mumbai, 0.15
+Bratislava, 0.00
+Oakland, 0.00
+Zurich, 0.00
+Shibuya, 0.00
+Istanbul, 0.00
+Fortaleza, 0.00
+La Victoria, 0.00
+Lucknow, 0.00
+Prague, 0.00
+
+Below is a list of the average number of products ordered from visitors in each country:
+
+United States, 6032642.25
+Japan, 290850.67
+United Kingdom, 253421.88
+Indonesia, 230888.72
+Denmark, 224380.51
+India, 186943.14
+Netherlands, 175028.34
+Philippines, 152563.77
+Canada, 150918.38
+Sweden, 140532.1
+Italy, 101611.51
+Taiwan, 93260.06
+Spain, 88482.07
+Germany, 82189.02
+Mexico, 75159.33
+France, 71940.84
+Australia, 61532.34
+Morocco, 55286.6
+Israel, 50604.64
+Brazil, 38870.53
+Ireland, 32102.46
+Malaysia, 30414.81
+Singapore, 30326.84
+Czechia, 26380.65
+Guatemala, 25497.99
+Poland, 25145.27
+(not set), 21405.8
+Argentina, 20804.25
+Colombia, 20086.92
+Serbia, 17771.74
+Turkey, 14428.8
+Laos, 12060.65
+Belgium, 11479.23
+Switzerland, 9778.86
+Panama, 9693.75
+Nepal, 6995.5
+Hungary, 6995.5
+Austria, 6778.87
+Pakistan, 6617.48
+Russia, 5181.04
+Reunion, 5096.4
+Ukraine, 5096.4
+Vietnam, 5064.3
+Romania, 4407
+Venezuela, 4150.94
+Thailand, 3926.28
+Hong Kong, 3775.95
+Portugal, 3336.3
+United Arab Emirates, 2798.2
+China, 2511.21
+Sri Lanka, 2412.98
+Norway, 2283.42
+Egypt, 1868.2
+Tanzania, 1277.01
+South Korea, 1270.88
+Chile, 1187.18
+New Zealand, 994.52
+Mauritius, 881.4
+Estonia, 732.32
+Finland, 677.64
+Maldives, 669.92
+Georgia, 501.93
+Bahamas, 377.72
+South Africa, 339.76
+Croatia, 305.78
+Bangladesh, 293.8
+C'ote d‚ÄôIvoire, 279.82
+Dominican Republic, 212.88
+Iraq, 131.94
+Greece, 0
+Peru, 0
+Slovakia, 0
+Lithuania, 0
+Latvia, 0
+Qatar, 0
+Tunisia, 0
 
 
 
@@ -122,7 +313,6 @@ Answer:
 
 Below is a list of the top-selling product from each city:
 
-Product Name, City, Total Quantity Sold
 Men's Watershed Full Zip Hoodie Grey, Adelaide, 3
 Canvas Tote Natural/Navy, Ahmedabad, 62
 Men's 100% Cotton Short Sleeve Hero Tee Navy, Akron, 13
@@ -350,10 +540,142 @@ Sport Bag, Westville, 70
 Sport Bag, Zurich, 140
 
 
+Below is a list for the topselling-product from each country
+
+22 oz  Bottle Infuser, Albania, 50
+ Twill Cap, Algeria, 9
+ Hard Cover Journal, Argentina, 170
+Windup Android, Armenia, 16
+22 oz  Bottle Infuser, Australia, 250
+ Custom Decals, Austria, 30
+ Twill Cap, Bahamas, 3
+ Men's 100% Cotton Short Sleeve Hero Tee White, Bahrain, 15
+Keyboard DOT Sticker, Bangladesh, 53
+ Stylus Pen w/ LED Light, Belarus, 2
+ 17oz Stainless Steel Sport Bottle, Belgium, 334
+ Men's Short Sleeve Hero Tee Black, Bolivia, 8
+ Toddler Short Sleeve Tee Red, Bosnia & Herzegovina, 2
+Waterproof Backpack, Botswana, 5
+Foam Can and Bottle Cooler, Brazil, 506
+ Toddler Short Sleeve Tee Red, Brunei, 2
+Spiral Notebook and Pen Set, Bulgaria, 69
+ Twill Cap, Cambodia, 9
+ 17oz Stainless Steel Sport Bottle, Canada, 1002
+Sport Bag, Chile, 70
+Android Hard Cover Journal, China, 15
+22 oz  Bottle Infuser, Colombia, 200
+ Power Bank, Costa Rica, 56
+Ballpoint LED Light Pen, Croatia, 456
+Suitcase Organizer Cubes, Cyprus, 5
+ Hard Cover Journal, Czechia, 510
+ Custom Decals, Cote d‚ÄôIvoire, 30
+ Hard Cover Journal, Denmark, 425
+22 oz  Bottle Infuser, Dominican Republic, 50
+ Men's  Zip Hoodie, Ecuador, 3
+22 oz  Bottle Infuser, Egypt, 50
+ Men's 100% Cotton Short Sleeve Hero Tee Navy, El Salvador, 13
+ Men's Short Sleeve Hero Tee Black, Estonia, 8
+ Hard Cover Journal, Ethiopia, 85
+Keyboard DOT Sticker, Finland, 53
+Foam Can and Bottle Cooler, France, 253
+ Custom Decals, Georgia, 90
+Ballpoint LED Light Pen, Germany, 1368
+ Men's 100% Cotton Short Sleeve Hero Tee White, Ghana, 15
+ Men's Vintage Henley, Gibraltar, 2
+Leatherette Journal, Greece, 319
+ Blackout Cap, Guatemala, 189
+ Cam Outdoor Security Camera - USA, Honduras, 112
+Leatherette Journal, Hong Kong, 319
+22 oz  Bottle Infuser, Hungary, 50
+ Insulated Stainless Steel Bottle, Iceland, 0
+ 17oz Stainless Steel Sport Bottle, India, 668
+ Spiral Journal with Pen, Indonesia, 290
+ Men's Vintage Badge Tee Black, Iraq, 1
+ 17oz Stainless Steel Sport Bottle, Ireland, 334
+Android 17oz Stainless Steel Sport Bottle, Israel, 334
+Leatherette Journal, Italy, 638
+ Men's  Zip Hoodie, Jamaica, 3
+Ballpoint LED Light Pen, Japan, 912
+ Tri-blend Hoodie Grey, Jersey, 11
+Suitcase Organizer Cubes, Jordan, 5
+Collapsible Shopping Bag, Kazakhstan, 43
+ Women's Short Sleeve Hero Tee Grey, Kenya, 2
+ Men's Vintage Badge Tee Black, Kosovo, 1
+ 17oz Stainless Steel Sport Bottle, Kuwait, 334
+Rocket Flashlight, Kyrgyzstan, 16
+ Hard Cover Journal, Laos, 170
+ Twill Cap, Latvia, 9
+22 oz  Bottle Infuser, Lithuania, 50
+ Twill Cap, Macau, 3
+22 oz  Bottle Infuser, Macedonia (FYROM), 50
+Ballpoint LED Light Pen, Malaysia, 456
+ Men's Performance Full Zip Jacket Black, Maldives, 1
+ Custom Decals, Mali, 30
+ Women's Fleece Hoodie Black, Malta, 0
+ Men's Fleece Hoodie Black, Martinique, 2
+ Power Bank, Mauritius, 56
+Ballpoint LED Light Pen, Mexico, 456
+ Custom Decals, Moldova, 30
+ Custom Decals, Montenegro, 30
+ Learning Thermostat 3rd Gen-USA - Stainless Steel, Morocco, 94
+22 oz  Bottle Infuser, Myanmar (Burma), 50
+22 oz  Bottle Infuser, Nepal, 50
+Ballpoint LED Light Pen, Netherlands, 456
+22 oz  Bottle Infuser, New Zealand, 150
+Compact Selfie Stick, Nicaragua, 5
+Keyboard DOT Sticker, Nigeria, 53
+22 oz  Bottle Infuser, Norway, 50
+ Hard Cover Journal, Oman, 85
+22 oz  Bottle Infuser, Pakistan, 200
+ Laptop Backpack, Palestine, 3
+22 oz  Bottle Infuser, Panama, 50
+ Hard Cover Journal, Papua New Guinea, 85
+ Men's 100% Cotton Short Sleeve Hero Tee Navy, Paraguay, 13
+ Hard Cover Journal, Peru, 85
+Android 17oz Stainless Steel Sport Bottle, Philippines, 167
+Keyboard DOT Sticker, Poland, 106
+ Blackout Cap, Portugal, 189
+ Custom Decals, Puerto Rico, 30
+ Men's 100% Cotton Short Sleeve Hero Tee Black, Qatar, 4
+Foam Can and Bottle Cooler, Romania, 253
+Leatherette Journal, Russia, 319
+ Doodle Decal, Reunion, 34
+22 oz  Bottle Infuser, San Marino, 50
+ 17oz Stainless Steel Sport Bottle, Saudi Arabia, 334
+Switch Tone Color Crayon Pen, Serbia, 34
+ 17oz Stainless Steel Sport Bottle, Singapore, 334
+ Stylus Pen w/ LED Light, Sint Maarten, 2
+ Hard Cover Journal, Slovakia, 170
+ Hard Cover Journal, Slovenia, 85
+Sport Bag, South Africa, 70
+Ballpoint LED Light Pen, South Korea, 456
+Ballpoint LED Light Pen, Spain, 456
+ Custom Decals, Sri Lanka, 30
+ Cam Outdoor Security Camera - USA, Sweden, 112
+Ballpoint LED Light Pen, Switzerland, 456
+Ballpoint LED Light Pen, Taiwan, 456
+ Twill Cap, Tanzania, 9
+Foam Can and Bottle Cooler, Thailand, 253
+ Hard Cover Journal, Trinidad & Tobago, 85
+22 oz  Bottle Infuser, Tunisia, 50
+ Hard Cover Journal, Turkey, 255
+ Laptop and Cell Phone Stickers, Uganda, 13
+ Hard Cover Journal, Ukraine, 255
+Leatherette Journal, United Arab Emirates, 319
+ Hard Cover Journal, United Kingdom, 1785
+ 17oz Stainless Steel Sport Bottle, United States, 6346
+22 oz  Bottle Infuser, Uruguay, 50
+ Hard Cover Journal, Venezuela, 170
+26 oz Double Wall Insulated Bottle, Vietnam, 97
+ Screen Cleaning Cloth, Zimbabwe, 12
 
 
 
-
+Notable trends among data :
+- Cotton t-shirts were the top seller across 22 cities, but were only top sellers among 5 countries. The top selling countries are all non-western nations, who experience hot and humid temperatures. 
+- The hard cover and leatherette journal were popular products within European cities
+- The US overall, as well as within each American city were some of the largest consumers of products and had some of the highest amounts for top-selling products.
+- There are a number of cities and a few countries who did not purchase any products in order to have a top-selling product.
 
 
 
