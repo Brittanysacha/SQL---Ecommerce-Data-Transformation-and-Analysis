@@ -576,17 +576,23 @@ ON  all_sessions.full_visitor_id = analytics.full_visitor_id;
 
 <!-- The columns visit_id, date, and channel_grouping in the analytics and all_sessions tables had the same names but different values under each. There were also some unique variables in each table. Combining these tables would have resulted in a significant number of NULL values and incomplete data due to the differing values in their columns. Therefore, I recommend leaving the analytics and all_sessions tables separate for now. However, it may be worth considering how they can be combined for future data collection purposes. -->
 ------------------------------------------------------------------------------------------------------
-<!-- The next step in the cleaning process is to fix any incorrect data types. From a current review there are some numbers that appear with a scientific notation, such as numbers the full_visitor_id numbers under the all_sessions and table -->
+<!-- The next step in the cleaning process is to fix any incorrect data types. I noticed that the unit_price column in the analytics table and the product_price column in the all_sessions table have values that appear to be in millions but should not be, as they should be representative of a dollar value. To correct this, I suggest dividing the values in these columns by 1,000,000 using the following SQL statements: -->
 
 UPDATE analytics
 SET unit_price = unit_price / 1000000;
 
 
 UPDATE all_sessions
+SET product_price = product_price / 1000000;
 
-I noticed that the unit_price column in the analytics table and the product_price column in the all_sessions table have values that appear to be in millions but are not represented as such. To correct this, I suggest dividing the values in these columns by 1,000,000 using the following SQL statements:
-
+This will convert the values in these columns from a millionth of a unit to a unit, making them easier to interpret and analyze."
 
 ------
-Inconsistent formatting or naming conventions
+<!-- Inconsistent formatting or naming conventions
+
+
+All variable titles with the SKU were updated to follow the format of word_word. If there was a similar variable formatted differently under a different table, it was corrected. All variable titles and table names were kept as lower case. -->
+
+ALTER TABLE product_sales_report RENAME COLUMN restocking_leadtime TO restocking_lead_time;
+
 
