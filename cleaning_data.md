@@ -198,7 +198,7 @@ WHERE zscore > 3;
 
 --------------------------------------------------------------------------------------------------------
 
- <!-- I executed statistical variance queries up to three degrees to identify outliers in the sales_by_sku table.  I further imputed NULL for missing values.
+ <!-- I executed statistical variance queries up to three degrees to identify outliers in the sales_by_sku table.  I further imputed NULL for missing values. -->
 
 WITH as_missing_values_imputed AS (
   SELECT product_sku, 
@@ -218,7 +218,7 @@ FROM zscores
 WHERE zscore > 3;
 
 <!-- No outliers returned for sales_by_sku - total_ordered  -->
-<!-- No outliers were found across the sales_by_sku table that warranted further investigation -->
+<!-- No outliers were found across the sales_by_sku table that warranted further investigation
 
 --------------------------------------------------------------------------------------------------------
 
@@ -273,7 +273,7 @@ FROM products
 JOIN sales_report
 ON products.sku = sales_report.product_sku;
 
-<!-- "The query revealed that all column names, except for an extra ratio column in the sales_report table, were a match to those in the products table. To verify if the data was also duplicated, I conducted a further query to review duplication across tables."
+<!-- "The query revealed that all column names, except for an extra ratio column in the sales_report table, were a match to those in the products table. To verify if the data was also duplicated, I conducted a further query to review duplication across tables." -->
 
 SELECT sku, product_name, ordered_quantity, stock_level, restocking_lead_time, sentiment_score, sentiment_magnitude
 FROM products
@@ -461,7 +461,7 @@ FROM all_sessions;
 
 <!-- After running the query, it was evident that a high number of NULL values were present in each of the variables. The NULL values were observed across the following variables: total_transaction_revenue (15,053/15,134 rows), session_quality_dim (13,096/15,134 rows), product_quantity (15,081/15,134 rows), product_revenue (15,130/15,134 rows), transaction_revenue (15,130/15,134 rows), transaction_id (15,125/15,134 rows), and ecommerce_action_option (15,103/15,134 rows). The high number of NULL values across each of these variables makes the data incomplete. Therefore, I removed these variables using a DROP COLUMN query. I deemed this as appropriate because their presence could affect the accuracy of an analysis as it would be based off of a small sum of results. It is recommended to document the removal of these variables and investigate the data collection methods to understand why so little data was collected for these variables. This understanding can aid in the recollection of these variables if desired for future analysis. -->
 
-The high number of NULL values across each of these variables makes the data incomplete. and would mean that analysis would likely not show a accurate representation of the data. Therefore, I decided to remove them from the table using a DROP COLUMN function. I would recomend notating the removal of these variables, and looking into data collection methods to determine why so little data was collected for these variables, so that it can be recollected if desired for future analysis.
+<!-- The high number of NULL values across each of these variables makes the data incomplete. and would mean that analysis would likely not show a accurate representation of the data. Therefore, I decided to remove them from the table using a DROP COLUMN function. I would recomend notating the removal of these variables, and looking into data collection methods to determine why so little data was collected for these variables, so that it can be recollected if desired for future analysis. -->
 ALTER TABLE all_sessions 
     DROP COLUMN total_transaction_revenue, 
     DROP COLUMN session_quality_dim, 
@@ -497,8 +497,8 @@ FROM analytics;
 
 ALTER TABLE analytics
     DROP COLUMN bounces
-    DROP COLUMN
-    DROP COLUMN
+    DROP COLUMN units_sold
+    DROP COLUMN revenue
 
  --------------------------------------------------------------------------------------------------------
 <!-- The next step in the cleaning process is to remove all duplicates across each dataset. I removed duplicates from within tables, using three commands :  CREATE TABLE with SELECT DISTINCT, DROP TABLE, and ALTER TABLE.  -->
@@ -542,34 +542,51 @@ DROP TABLE sales_report;
 
 ALTER TABLE new_sales_report RENAME TO sales_report;
 
-<!-- I further compared data across tables, where there were similar variable names that were not associated with the primary key. -->
+<!-- Having noted earlier that the sales_report and products tables held the same variables but contained some different values, I chose to join the like variables together using a CREATE TABLE and UNION command. Since the products table did not have a ratio variable, I needed to add one to the products table first so it could be a complete match for the sales_report table.  -->
 
-SELECT products.sentiment_score, products.sentiment_magnitude, 
-sales_report.sentiment_score, sales_report.sentiment_magnitude
-FROM products
-JOIN sales_report ON sales_report.product_sku = products.sku
-ORDER BY products.sentiment_score
-
-<!-- The quesry returned that the columns/variables were identical. Given that the sentiment score and magnitude of the products would have occured after product purchase, and would have been part of a sales report evaluation, I dropped the sentiment_score and sentiment_magnitude columns from the products table. -->
-
-ALTER TABLE products 
-    DROP COLUMN sentiment_score, 
-    DROP COLUMN sentiment_magnitude;
+ALTER TABLE products
+CREATE COLUMN ratio DOUBLE PRECISION
 
 
+CREATE TABLE new_sales_report AS
+SELECT product_sku, total_ordered, product_name, stock_level, restocking_leadtime, sentiment_score, sentiment_magnitude, ratio
+FROM sales_report
+UNION
+SELECT sku, ordered_quantity, product_name, stock_level, restocking_lead_time, sentiment_score, sentiment_magnitude, ratio
+FROM products;
+
+<!-- Afterwards I removed the initial products table and the sales_report, before running the same duplicate removal SELECT DISTINCT command, as previously done above. At that time renaming the table to product_sales_report.  -->
+
+DROP TABLE sales_report;
+
+DROP TABLE products;
+
+CREATE TABLE products_sales_report AS
+SELECT DISTINCT * FROM new_sales_report;
+
+DROP TABLE new_sales_report;
+
+<!-- The other duplicated table variables I became aware of were in the analytics and all_sessions tables. I tested this by matching three similar column variables.-->
+
+SELECT analytics.visit_id, all_sessions.visit_id, analytics.date, all_sessions.date, 
+analytics.channel_grouping, all_sessions.channel_grouping  
+FROM analytics
+JOIN all_sessions
+ON  all_sessions.full_visitor_id = analytics.full_visitor_id;
+
+<!-- The columns visit_id, date, and channel_grouping in the analytics and all_sessions tables had the same names but different values under each. There were also some unique variables in each table. Combining these tables would have resulted in a significant number of NULL values and incomplete data due to the differing values in their columns. Therefore, I recommend leaving the analytics and all_sessions tables separate for now. However, it may be worth considering how they can be combined for future data collection purposes. -->
 ------------------------------------------------------------------------------------------------------
 <!-- The next step in the cleaning process is to fix any incorrect data types. From a current review there are some numbers that appear with a scientific notation, such as numbers the full_visitor_id numbers under the all_sessions and table -->
 
-
-SELECT CAST(full_visitor_id AS BIGINT) AS full_visitor_id
-FROM YourTable;
-
-SELECT *
-FROM all_sessions
-JOIN analytics
-ON all_sessions.full_visitor_id = analytics.full_visitor_id;
-
-
-FIX unit price under analytics
 UPDATE analytics
 SET unit_price = unit_price / 1000000;
+
+
+UPDATE all_sessions
+
+I noticed that the unit_price column in the analytics table and the product_price column in the all_sessions table have values that appear to be in millions but are not represented as such. To correct this, I suggest dividing the values in these columns by 1,000,000 using the following SQL statements:
+
+
+------
+Inconsistent formatting or naming conventions
+
