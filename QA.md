@@ -1,5 +1,5 @@
 What are your risk areas? Identify and describe them.
-
+<!-- The Ecommerce database has numerous areas of risk, which should be of concern. These include data accuracy, completeness, consistency, and validity issues such as duplication, incorrect numbering formats, inconsistent connecting variables across tables, and missing or NULL data. The data can be cleaned, with duplicates removed, formatting corrected, naming conventions standardized across tables, and missing data filled or imputed where needed. Nonetheless, even after resolving existing issues, the presence of inaccurate and incorrect data across all of the datasets within the ecommerce data base raises concern about the accuracy and validity of other data that appears consistent and valid. -->
 
 
 QA Process:

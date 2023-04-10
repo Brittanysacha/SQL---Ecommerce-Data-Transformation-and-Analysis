@@ -311,12 +311,12 @@ WHERE all_sessions.country IS NOT NULL
 GROUP BY region, products.product_name
 ORDER BY region, total_products DESC, products.product_name;
 
-<!-- Query for top types of product/city -->
+<!-- Query for top types of product in each city. --> 
 SELECT
   CASE 
     WHEN city IN ('Sacramento', 'Toronto', 'Chicago',
 				  'Los Angeles', 'Santa Fe', 'Cupertino',
-				  'Calgary', 'Palo Alto', 'Vancouver'
+				  'Boston', 'Palo Alto', 'Vancouver'
 				  'San Francisco', 'Detroit', 'San Bruno',
 				  'Ann Arbor', 'Houston', 'Pittsburgh',
 				  'Sunnyvale', 'New York', 'Irvine',
@@ -325,7 +325,7 @@ SELECT
 				  'Dallas', 'San Antonio', 'Orlando',
 				  'Philadelphia', 'Milpitas', 'Oakland',
                   'Salem', 'Santa Clara', 'Mountain View'
-                  'Waterloo', 'South San Francisco', 'Fort Worth',
+                  'Waterloo', 'Fort Worth','University Park',
                   'Austin', 'LaFayette', 'Washington',
                   'Bellingham', 'Cupertino', 'San Antonio',
                   'Greer', 'Dallas', 'Jacksonville',
@@ -333,36 +333,59 @@ SELECT
                   'Bellflower', 'Council Bluffs', 'Pleasanton',
                   'Chicago', 'Houston', 'Portland',
                   'Menlo Park', 'Piscataway Township', 'Westville',
-                   'South El Monte', 'Indianapolis', 'Johnson City',
-                   'Kitchener') THEN 'North America'
+                  'South El Monte', 'Indianapolis', 'Johnson City',
+                  'Kitchener', 'Norfolk', 'Santa Monica', 
+                  'Mississauga', 'Calgary', 'San Antonio', 
+                  'Jersey City', 'Berkeley', 'Sherbrooke', 
+                  'Tampa', 'Tempe', 'The Dalles',
+                  'Denver', 'Druid Hills', 'Columbus', 
+                  'Charlottetown', 'Edmonton', 'Forest Park', 
+                  'Fremont Goose', 'Creek', 'Kansas City', 
+                  'Las Vegas', 'Mexico City', 'Minneapolis',
+                  'Monterrey', 'Montreal', 'Nashville',
+                  'Ottawa', 'Phoenix', 'Quebec City',
+                  'Raleigh', 'Redmond', 'Redwood City', 
+                  'Richardson', 'San Diego', 'St. Johns' 
+                  'St. Louis','Stanford', 'Wellesley', 
+                  'Westlake Village', 'Parsippany-Troy Hills', 'Columbia'
+                  'Culican', 'Eau Claire', 'El Paso',
+                  'Hayward', 'Kalamazoo', 'Lake Oswego',
+                  'Madison', 'Akron', 'Appleton',
+                  'Avon', 'Boulder', 'Charlotte') THEN 'North America'
     WHEN city IN ('Rio de Janeiro', 'Bogota', 'Buenos Aires',
 				  'Sao Paulo', 'Rosario', 'La Victoria'
-                  'Maracaibo', 'Rosario', 'Buenos Aires',
-                  'Belo Horizonte', 'Odessa', 'Santa Clara',
-                  'Sao Paulo', 'Fortaleza', 'Ama') THEN 'South America'
-    WHEN city IN ('Panama City') THEN 'Central America'
+                  'Maracaibo', 'Buenos Aires','Belo Horizonte', 
+                  'Odessa', 'Sao Paulo','Ama',
+                  'Fortaleza', 'Montevideo', 'Asuncion',
+                  'Belo Horizonte') THEN 'South America'
+    WHEN city IN ('Panama City', 'Santiago', 'San Salvador') THEN 'Central America'
     WHEN city IN ('Barcelona', 'Rome', 'Dublin',
-				  'Munich', 'Berlin', 'Tel Aviv-Yafo',
+				  'Munich', 'Berlin' 'Watford',
 				  'Stockholm', 'Paris', 'London',
 				  'Warsaw', 'Amsterdam', 'Hamburg',
 				  'Bratislava', 'Prague', 'Zurich',
 				  'Istanbul', 'Moscow', 'Saint Petersburg'
-                  'Sherbrooke', 'Stuttgart', 'Belgrade',
+                  'Courbevoie', 'Stuttgart', 'Belgrade',
                   'Quimper', 'Wroclaw', 'Brussels',
-                  'East Lansing', 
+                  'East Lansing', 'Esbjerg', 
                   'Kiev', 'Zagreb', 'Budapest', 
                   'Villeneuve-d'Ascq', 'Stockholm', 
                   'Moscow', 'Wrexham', 'Cluj-Napoca', 
-                  'Nice', 'Coventry', 'Courbevoie', 
+                  'Nice', 'Coventry', 'Cork', 
                   'Egham', 'Copenhagen', 'Oslo', 
-                  'Frankfurt', 'Barcelona', 'Edinburgh', 
-                  'Rotterdam', 'Amsterdam', 'Iasi', 
+                  'Rotterdam', 'Cambridge', 'Iasi', 
                   'Oviedo', 'Vienna', 'Rome', 
                   'Salford', 'Lisbon', 'Marlboro', 
                   'Ghent', 'Chico', 'Milan', 
                   'Poznan', 'Thessaloniki', 'Pozuelo de Alarcon', 
                   'Glasgow', 'Montreuil', 'Helsinki',
-                  'Dublin', 'Marseille') THEN 'Europe'
+                  'Athens', 'Madrid', 'Kovrov', 
+                  'Timisoara', 'Frankfurt', 'Krakow',
+                  'Skopje', 'Oxford', 'Groningen',
+                  'Bucharest', 'Bordeaux', 'Gothenburg',
+                  'Manchester', 'Kharkiv', 'Antwerp',
+                  'Dublin', 'Marseille', 'Antalya',
+                  'Bilbao', 'Brno') THEN 'Europe'                
     WHEN city IN ('Shinjuku', 'Zhongli District', 'Hyderabad',
 				  'Chennai', 'Kuala Lumpur', 'Ipoh',
 				  'Jaipur', 'Pune', 'Bangkok',
@@ -370,15 +393,25 @@ SELECT
                   'Taguig', 'Kharagpur', 'Izmir', 
                   'Riyadh', 'Petaling Jaya', 'Singapore', 
                   'Hanoi', 'Manila', 'Quezon City', 
-                  'Gurgaon', 'Antwerp', 'Vladivostok',
+                  'Gurgaon', 'Bandung', 'Vladivostok',
                   'Chiyoda', 'Longtan District', 'Salem',
-                   'Jaipur', 'Ipoh', 'Karachi', 
-                   'Kolkata', 'La Victoria', 'Medellin',
-                   'Osaka', 'Lucknow', 'Belgrade', 
-                   'Vilnius', 'Doha', 'Hong Kong',
-                    'Lahore', 'Sapporo') THEN 'Asia-Pacific'
-    WHEN city IN ('Cape Town') THEN 'Africa'
-    WHEN city IN ('Melbourne', 'Brisbane', 'Sydney') THEN 'Oceania'
+                  'Jaipur', 'Ipoh', 'Karachi', 
+                  'Kolkata', 'La Victoria', 'Medellin',
+                  'Osaka', 'Lucknow', 'Chuo', 
+                  'Vilnius', 'Doha', 'Hong Kong',
+                  'Lahore', 'Sapporo', 'Indore'
+                  'Bhubaneswar', 'Yokohama', 'Mumbai',
+                  'Nagoya', 'Nanded', 'Neipu Township',
+                  'New Delhi', 'Patna', 'Sakai',
+                  'Shibuya', 'Colombo', 'Dubai',
+                  'Makati', 'Jakarta', 'Ho Chi Minh City',
+                  'Chandigarh', 'Bengaluru', 'Bejing',
+                  'Ahmedabad') THEN 'Asia-Pacific'
+    WHEN city IN ('Cape Town', Nairobi', 'Sandton',
+                  'Amã', 'Alexandria') THEN 'Africa'
+    WHEN city IN ('Melbourne', 'Brisbane', 'Sydney',
+                  'Adelaide', 'Auckland', 'Perth',
+                  'Brisbane') THEN 'Oceania'
     ELSE 'Other' 
   END AS region,
   products.product_name,
@@ -395,8 +428,12 @@ GROUP BY region, products.product_name
 ORDER BY region, total_products DESC, products.product_name;
 
 Answer:
-- The Learning Thermostat 3rd Gen-USA - Stainless Steel was the most popular product among countries in the African region, with 282 units sold.
+- The Learning Thermostat 3rd Gen-USA - Stainless Steel was the most popular product among countries in the African countries, with 282 units sold.
+
 - The blackout cap was the most popular product among countries in the Central American region, with 1701 units sold.
+
+The  17oz Stainless Steel Sport Bottle was the most popular producy among the Asia-Pacific region with 7348 units sold.
+
 - The Foam Can and Bottle Cooler was the most popular product among countries in the European region, with 10879 units sold.
 
 - The 17oz Stainless Steel Sport Bottle was the most popular product among countries in the North American region, with 36740 units sold.
@@ -404,7 +441,8 @@ Answer:
 - The Protect smoke + CO White Wired Alarm USA was the most popular product among countries in the oceanic region, with 882 units sold.
 
 - The SPF-15 Slim & Slender Lip Balm was the most popular product among countries in the South American region, with the actual number of units sold not mentioned.
-- There is not any data collected on African or central american cities, this could be due to size or population of those given regions, or a lack of orders. Adding data from these cities, is something to consider to have a more complete dataset .
+
+The Asia-Pacific countries top purchases were stationary and other school supplies, Central American countries bought clothing and clothing accessories, African countries had varied top purchases, European countries had mixed purchases although did not purchase a lot of clothes or accessories instead favouring outdoor goods, North American countries purchased large quantities of a wide variety of products, Oceanic countries purchased bought a lot of electronic accessories, clothing and clothing accessories, and South American countries purchased a lot of hygeine/personal care products and clothing. By looking at both cities and countries, we are able to see that a significant amount of purchases did not have a listed country or city associated with their information. This is a gap in the dataset that will in the future need to be addressed. 
 
 
 

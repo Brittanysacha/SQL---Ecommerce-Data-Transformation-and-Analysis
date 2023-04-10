@@ -501,7 +501,7 @@ ALTER TABLE analytics
     DROP COLUMN
 
  --------------------------------------------------------------------------------------------------------
-<!-- The next step in the cleaning process is to remove all duplicates across each dataset. Using three commands CREATE TABLE with SELECT DISTINCT, DROP TABLE, and ALTER TABLE.  -->
+<!-- The next step in the cleaning process is to remove all duplicates across each dataset. I removed duplicates from within tables, using three commands :  CREATE TABLE with SELECT DISTINCT, DROP TABLE, and ALTER TABLE.  -->
 
 CREATE TABLE new_all_sessions AS
 SELECT DISTINCT * FROM all_sessions;
@@ -541,6 +541,20 @@ SELECT DISTINCT * FROM sales_report;
 DROP TABLE sales_report;
 
 ALTER TABLE new_sales_report RENAME TO sales_report;
+
+<!-- I further compared data across tables, where there were similar variable names that were not associated with the primary key. -->
+
+SELECT products.sentiment_score, products.sentiment_magnitude, 
+sales_report.sentiment_score, sales_report.sentiment_magnitude
+FROM products
+JOIN sales_report ON sales_report.product_sku = products.sku
+ORDER BY products.sentiment_score
+
+<!-- The quesry returned that the columns/variables were identical. Given that the sentiment score and magnitude of the products would have occured after product purchase, and would have been part of a sales report evaluation, I dropped the sentiment_score and sentiment_magnitude columns from the products table. -->
+
+ALTER TABLE products 
+    DROP COLUMN sentiment_score, 
+    DROP COLUMN sentiment_magnitude;
 
 
 ------------------------------------------------------------------------------------------------------
