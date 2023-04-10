@@ -298,17 +298,17 @@ SELECT
     WHEN country IN ('Australia', 'New Zealand', 'Fiji') THEN 'Oceania'
     ELSE 'Other' 
   END AS region,
-  sales_report.product_name,
-  SUM(sales_report.total_ordered) AS "total_products",
+  products_sales_report.product_name,
+  SUM(products_sales_report.total_ordered) AS "total_products",
   COUNT(*) AS total_orders
 FROM all_sessions 
-  JOIN sales_report ON all_sessions.product_SKU = sales_report.product_SKU
+  JOIN products_sales_report ON all_sessions.product_SKU = products_sales_report.product_SKU
   JOIN analytics ON all_sessions.full_visitor_id = analytics.full_visitor_id 
       AND all_sessions.visit_id = analytics.visit_id
 WHERE all_sessions.country IS NOT NULL
       AND all_sessions.country != 'not available in demo dataset' 
-GROUP BY region, sales_report.product_name
-ORDER BY region, total_products DESC, sales_report.product_name;
+GROUP BY region, products_sales_report.product_name
+ORDER BY region, total_products DESC, products_sales_report.product_name;
 
 <!-- Query for top types of product in each city. --> 
 SELECT
@@ -413,17 +413,18 @@ SELECT
                   'Brisbane') THEN 'Oceania'
     ELSE 'Other' 
   END AS region,
-  sales_report.product_name,
-  SUM(sales_report.total_ordered) AS "total_products",
+  products_sales_report.product_name,
+  SUM(products_sales_report.total_ordered) AS "total_products",
   COUNT(*) AS total_orders
 FROM all_sessions 
-  JOIN sales_report ON all_sessions.product_SKU = sales_report.product_SKU
+  JOIN products_sales_report ON all_sessions.product_SKU = products_sales_report.product_SKU
   JOIN analytics ON all_sessions.full_visitor_id = analytics.full_visitor_id 
       AND all_sessions.visit_id = analytics.visit_id
 WHERE all_sessions.city IS NOT NULL
       AND all_sessions.city != 'not available in demo dataset' 
-GROUP BY region, sales_report.product_name
-ORDER BY region, total_products DESC, sales_report.product_name;
+GROUP BY region, products_sales_report.product_name
+ORDER BY region, total_products DESC, products_sales_report.product_name;
+
 
 Answer:
 - The Learning Thermostat 3rd Gen-USA - Stainless Steel was the most popular product among countries in the African countries, with 282 units sold.
@@ -451,52 +452,55 @@ The Asia-Pacific countries top purchases were stationary and other school suppli
 
 
 SQL Queries:
+
+<!-- Top selling product by country query -->
 SELECT 
     sub.product_name,
     sub.country,
     sub.total_quantity
 FROM (
     SELECT 
-        products.product_name,  
+        products_sales_report.product_name,  
         all_sessions.country,
         SUM(sales_by_sku.total_ordered) AS total_quantity,
         ROW_NUMBER() OVER (PARTITION BY all_sessions.country ORDER BY SUM(sales_by_sku.total_ordered) DESC) AS rn
     FROM all_sessions
-        JOIN products ON all_sessions.product_sku = products.sku
-        JOIN sales_by_sku ON sales_by_sku.product_sku = products.sku
+        JOIN products_sales_report ON all_sessions.product_sku = products_sales_report.product_sku
+        JOIN sales_by_sku ON sales_by_sku.product_sku = products_sales_report.product_sku
     WHERE product_name IS NOT NULL
         AND country IS NOT NULL
-        AND sku IS NOT NULL
-        AND total_ordered IS NOT NULL
+        AND products_sales_report.product_sku IS NOT NULL
+        AND sales_by_sku.total_ordered IS NOT NULL
         AND product_name != 'not available in demo dataset' AND product_name != '(not set)'
         AND country != 'not available in demo dataset' AND country != '(not set)'
-        AND sku != 'not available in demo dataset' AND sku != '(not set)'
-    GROUP BY products.product_name, all_sessions.country
+        AND products_sales_report.product_sku != 'not available in demo dataset' AND products_sales_report.product_sku != '(not set)'
+    GROUP BY products_sales_report.product_name, all_sessions.country
 ) sub
 WHERE sub.rn = 1
 ORDER BY sub.country;
 
+<!-- Top selling product by city query -->
 SELECT 
     sub.product_name,
     sub.city,
     sub.total_quantity
 FROM (
     SELECT 
-        products.product_name,  
+        products_sales_report.product_name,  
         all_sessions.city,
         SUM(sales_by_sku.total_ordered) AS total_quantity,
         ROW_NUMBER() OVER (PARTITION BY all_sessions.city ORDER BY SUM(sales_by_sku.total_ordered) DESC) AS rn
     FROM all_sessions
-        JOIN products ON all_sessions.product_sku = products.sku
-        JOIN sales_by_sku ON sales_by_sku.product_sku = products.sku
+        JOIN products_sales_report ON all_sessions.product_sku = products_sales_report.product_sku
+        JOIN sales_by_sku ON sales_by_sku.product_sku = products_sales_report.product_sku
     WHERE product_name IS NOT NULL
-        AND city IS NOT NULL
-        AND sku IS NOT NULL
-        AND total_ordered IS NOT NULL
+        AND country IS NOT NULL
+        AND products_sales_report.product_sku IS NOT NULL
+        AND sales_by_sku.total_ordered IS NOT NULL
         AND product_name != 'not available in demo dataset' AND product_name != '(not set)'
-        AND city != 'not available in demo dataset' AND city != '(not set)'
-        AND sku != 'not available in demo dataset' AND sku != '(not set)'
-    GROUP BY products.product_name, all_sessions.city
+        AND country != 'not available in demo dataset' AND country != '(not set)'
+        AND products_sales_report.product_sku != 'not available in demo dataset' AND products_sales_report.product_sku != '(not set)'
+    GROUP BY products_sales_report.product_name, all_sessions.city
 ) sub
 WHERE sub.rn = 1
 ORDER BY sub.city;
