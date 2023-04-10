@@ -1,16 +1,17 @@
-<!-- What issues will you address by cleaning the data?
+What issues will you address by cleaning the data?
 When cleaning the dataset, I wanted to check for a range of potential data issues including:
 
 -	Outliers or extreme values
 -   Missing or incomplete data
 -	Duplicate entries
 -	Incorrect data types
--	Inconsistent formatting or naming conventions -->
+-	Inconsistent formatting or naming conventions
+
 
 --------------------------------------------------------------------------------------------------------
-<!-- To begin to address these issues, I wanted to perform a range of data cleaning tasks: -->
+To begin to address these issues, I wanted to perform a range of data cleaning tasks: -->
 
-<!-- I started by executing statistical variance queries up to three degrees in the all_sessions table to identify outliers. I further imputed NULL for missing values. --> 
+I started by executing statistical variance queries up to three degrees in the all_sessions table to identify outliers. I further imputed NULL for missing values. 
 
 WITH as_missing_values_imputed AS (
   SELECT full_visitor_id, 
@@ -29,7 +30,7 @@ SELECT full_visitor_id, time, zscore
 FROM zscores
 WHERE zscore > 3;
 
-<!-- No outliers returned for all_sessions - time -->
+No outliers returned for all_sessions - time
 
 WITH as_missing_values_imputed AS (
   SELECT full_visitor_id, 
@@ -50,7 +51,7 @@ SELECT full_visitor_id, time_on_site, zscore
 FROM zscores
 WHERE zscore > 3;
 
-<!-- No outliers returned for all_sessions - time_on_site -->
+No outliers returned for all_sessions - time_on_site
 
 WITH as_missing_values_imputed AS (
   SELECT full_visitor_id, 
@@ -69,7 +70,7 @@ SELECT full_visitor_id, product_price, zscore
 FROM zscores
 WHERE zscore > 3;
 
-<!-- No outliers returned for all_sessions - product_price -->
+No outliers returned for all_sessions - product_price
 
 WITH as_missing_values_imputed AS (
   SELECT full_visitor_id, 
@@ -90,14 +91,14 @@ SELECT full_visitor_id, page_views, zscore
 FROM zscores
 WHERE zscore > 3;
 
-<!-- No outliers returned for all_sessions - page_views -->
+No outliers returned for all_sessions - page_views
 
 
-<!-- No outliers were found across the all_session table that warranted further investigation. Additionally, the columns total_transaction_revenue, transactions, session_quality_dim, product_refund_amount, product_quantity, product_revenue, item_quantity, transaction_revenue, transaction_id, search_keyword, and ecommerce_action_option all returned NULL values for all of their rows. Considering the goals of the data analysis, it would be appropriate to remove columns with no data that would not significantly impact the insights being sought. This would streamline the analysis and reduce the complexity of the data. -->
+No outliers were found across the all_session table that warranted further investigation. Additionally, the columns total_transaction_revenue, transactions, session_quality_dim, product_refund_amount, product_quantity, product_revenue, item_quantity, transaction_revenue, transaction_id, search_keyword, and ecommerce_action_option all returned NULL values for all of their rows. Considering the goals of the data analysis, it would be appropriate to remove columns with no data that would not significantly impact the insights being sought. This would streamline the analysis and reduce the complexity of the data.
+
 
 --------------------------------------------------------------------------------------------------------
-
-<!-- I executed statistical variance queries up to three degrees to identify outliers in the products table.  I further imputed NULL for missing values. -->
+I executed statistical variance queries up to three degrees to identify outliers in the products table.  I further imputed NULL for missing values. -->
 
 WITH as_missing_values_imputed AS (
   SELECT sku, 
@@ -116,7 +117,7 @@ SELECT sku, ordered_quantity, zscore
 FROM zscores
 WHERE zscore > 3;
 
-<!-- No outliers returned for products - ordered_quantity -->
+No outliers returned for products - ordered_quantity 
 
 WITH as_missing_values_imputed AS (
   SELECT sku, 
@@ -135,7 +136,7 @@ SELECT sku, stock_level, zscore
 FROM zscores
 WHERE zscore > 3;
 
-<!-- No outliers returned for products - stock_level -->
+No outliers returned for products - stock_level
 
 WITH as_missing_values_imputed AS (
   SELECT sku, 
@@ -154,7 +155,7 @@ SELECT sku, restocking_lead_time, zscore
 FROM zscores
 WHERE zscore > 3;
 
-<!-- No outliers returned for products - restocking_lead_time -->
+No outliers returned for products - restocking_lead_time 
 
 WITH as_missing_values_imputed AS (
   SELECT sku, 

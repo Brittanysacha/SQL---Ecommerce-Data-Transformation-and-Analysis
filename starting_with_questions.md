@@ -444,10 +444,6 @@ The  17oz Stainless Steel Sport Bottle was the most popular producy among the As
 The Asia-Pacific countries top purchases were stationary and other school supplies, Central American countries bought clothing and clothing accessories, African countries had varied top purchases, European countries had mixed purchases although did not purchase a lot of clothes or accessories instead favouring outdoor goods, North American countries purchased large quantities of a wide variety of products, Oceanic countries purchased bought a lot of electronic accessories, clothing and clothing accessories, and South American countries purchased a lot of hygeine/personal care products and clothing. By looking at both cities and countries, we are able to see that a significant amount of purchases did not have a listed country or city associated with their information. This is a gap in the dataset that will in the future need to be addressed. 
 
 
-
-
-
-
 **Question 4: What is the top-selling product from each city/country? Can we find any pattern worthy of noting in the products sold?**
 
 
@@ -879,7 +875,6 @@ Notable trends among data :
 **Question 5: Can we summarize the impact of revenue generated from each city/country?**
 
 SQL Queries:
-
 
 
 Answer:
