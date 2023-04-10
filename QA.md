@@ -1,6 +1,8 @@
-What are your risk areas? Identify and describe them.
-<!-- The Ecommerce database has numerous areas of risk, which should be of concern. These include data accuracy, completeness, consistency, and validity issues such as duplication, incorrect numbering formats, inconsistent connecting variables across tables, and missing or NULL data. The data can be cleaned, with duplicates removed, formatting corrected, naming conventions standardized across tables, and missing data filled or imputed where needed. Nonetheless, even after resolving existing issues, the presence of inaccurate and incorrect data across all of the datasets within the ecommerce data base raises concern about the accuracy and validity of other data that appears consistent and valid. -->
+<!-- What are your risk areas? Identify and describe them. -->
 
+The Ecommerce database has numerous areas of risk, which should be of concern. These include data accuracy, completeness, consistency, and validity issues such as duplication, incorrect numbering formats, inconsistent connecting variables across tables, and missing or NULL data. The data can be cleaned, with duplicates removed, formatting corrected, naming conventions standardized across tables, and missing data filled or imputed where needed. Nonetheless, even after resolving existing issues, the presence of inaccurate and inconsistent data across all of the datasets within the ecommerce database should raise concern about the accuracy and validity of other data that appears consistent and valid. 
+
+Further, another risk that should be addressed during QA, is the imcomplete list og countries and cities included within the all_sessions table of the Ecommerce database. Although, it is possible that this particular Ecommerce organization does not sell products outside of the regions they included in the all_sessions dataset, there a large number of variables related to products sold without country or city information (imputted as NULL or not available in demo dataset). Without all countries and cities accounted for, there could be inaccurate data generated for reporting and insights. Particuarly if this data is used for market analysis. Comprehensive and up-to-date information on countries and cities would be reqired to minimize the risk of erroneous decisions 
 
 QA Process:
 Describe your QA process and include the SQL queries used to execute it.
@@ -55,6 +57,14 @@ SELECT DISTINCT * FROM sales_report;
 DROP TABLE sales_report;
 
 ALTER TABLE new_sales_report RENAME TO sales_report;
+
+<!-- I further compared data across tables, where there were similar variable names that were not associated with the primary key ().  -->
+
+SELECT products.sentiment_score, products.sentiment_magnitude, 
+sales_report.sentiment_score, sales_report.sentiment_magnitude
+FROM products
+JOIN sales_report ON sales_report.product_sku = products.sku
+ORDER BY products.sentiment_score
 
 <!-- Identify missing values within each table, and ensure that all required data is present (i.e. ID numbers): -->
 
