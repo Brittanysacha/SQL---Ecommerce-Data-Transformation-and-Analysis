@@ -298,18 +298,17 @@ SELECT
     WHEN country IN ('Australia', 'New Zealand', 'Fiji') THEN 'Oceania'
     ELSE 'Other' 
   END AS region,
-  products.product_name,
+  sales_report.product_name,
   SUM(sales_report.total_ordered) AS "total_products",
   COUNT(*) AS total_orders
 FROM all_sessions 
   JOIN sales_report ON all_sessions.product_SKU = sales_report.product_SKU
   JOIN analytics ON all_sessions.full_visitor_id = analytics.full_visitor_id 
       AND all_sessions.visit_id = analytics.visit_id
-  JOIN products ON products.sku = sales_report.product_SKU
 WHERE all_sessions.country IS NOT NULL
       AND all_sessions.country != 'not available in demo dataset' 
-GROUP BY region, products.product_name
-ORDER BY region, total_products DESC, products.product_name;
+GROUP BY region, sales_report.product_name
+ORDER BY region, total_products DESC, sales_report.product_name;
 
 <!-- Query for top types of product in each city. --> 
 SELECT
@@ -360,7 +359,7 @@ SELECT
                   'Belo Horizonte') THEN 'South America'
     WHEN city IN ('Panama City', 'Santiago', 'San Salvador') THEN 'Central America'
     WHEN city IN ('Barcelona', 'Rome', 'Dublin',
-				  'Munich', 'Berlin' 'Watford',
+				  'Munich', 'Berlin', 'Watford',
 				  'Stockholm', 'Paris', 'London',
 				  'Warsaw', 'Amsterdam', 'Hamburg',
 				  'Bratislava', 'Prague', 'Zurich',
@@ -369,7 +368,7 @@ SELECT
                   'Quimper', 'Wroclaw', 'Brussels',
                   'East Lansing', 'Esbjerg', 
                   'Kiev', 'Zagreb', 'Budapest', 
-                  'Villeneuve-d'Ascq', 'Stockholm', 
+                  'Villeneuve-d Ascq', 'Stockholm', 
                   'Moscow', 'Wrexham', 'Cluj-Napoca', 
                   'Nice', 'Coventry', 'Cork', 
                   'Egham', 'Copenhagen', 'Oslo', 
@@ -407,25 +406,24 @@ SELECT
                   'Makati', 'Jakarta', 'Ho Chi Minh City',
                   'Chandigarh', 'Bengaluru', 'Bejing',
                   'Ahmedabad') THEN 'Asia-Pacific'
-    WHEN city IN ('Cape Town', Nairobi', 'Sandton',
+    WHEN city IN ('Cape Town', 'Nairobi', 'Sandton',
                   'Amã', 'Alexandria') THEN 'Africa'
     WHEN city IN ('Melbourne', 'Brisbane', 'Sydney',
                   'Adelaide', 'Auckland', 'Perth',
                   'Brisbane') THEN 'Oceania'
     ELSE 'Other' 
   END AS region,
-  products.product_name,
+  sales_report.product_name,
   SUM(sales_report.total_ordered) AS "total_products",
   COUNT(*) AS total_orders
 FROM all_sessions 
   JOIN sales_report ON all_sessions.product_SKU = sales_report.product_SKU
   JOIN analytics ON all_sessions.full_visitor_id = analytics.full_visitor_id 
       AND all_sessions.visit_id = analytics.visit_id
-  JOIN products ON products.sku = sales_report.product_SKU
 WHERE all_sessions.city IS NOT NULL
       AND all_sessions.city != 'not available in demo dataset' 
-GROUP BY region, products.product_name
-ORDER BY region, total_products DESC, products.product_name;
+GROUP BY region, sales_report.product_name
+ORDER BY region, total_products DESC, sales_report.product_name;
 
 Answer:
 - The Learning Thermostat 3rd Gen-USA - Stainless Steel was the most popular product among countries in the African countries, with 282 units sold.
