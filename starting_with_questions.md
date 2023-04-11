@@ -875,8 +875,6 @@ The insights gained from analyzing these trends could prove to be a valuable res
 
 SQL Queries:
 
-SQL Queries:
-
 SELECT all_sessions.city, 
 	SUM(product_sales_report.total_ordered * analytics.unit_price) AS revenue
 FROM all_sessions 
