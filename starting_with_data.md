@@ -91,10 +91,21 @@ DATE        TRAFFIC
 
 
 
-
-
 Question 5: How much revenue has the commerce store generated/per month since opening?
 
 SQL Queries:
 
+SELECT 
+    DATE_TRUNC('month', all_sessions.date) AS month,
+    SUM(products_sales_report.total_ordered * all_sessions.product_price) AS revenue
+FROM 
+    all_sessions
+JOIN 
+    products_sales_report ON all_sessions.product_sku = products_sales_report.product_sku
+GROUP BY 
+    1
+ORDER BY 
+    1 ASC;
+
 Answer:
+Despite the promising growth of the ecommerce store and an initial increase in revenue since its opening, a closer look at the data reveals a decline in revenue outside of the early summer months, specifically May to July. The most significant drop-off in revenue occurred in August 2017, the last month for which data was collected. It would be helpful to know the data cut-off date to determine if this is an accurate representation of the entire month. If it is, this suggests a significant issue that requires attention.
