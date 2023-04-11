@@ -865,10 +865,9 @@ Leatherette Journal, United Arab Emirates, 319
 
 
 Notable trends among data :
-- Cotton t-shirts were the top seller across 22 cities, but were only top sellers among 5 countries. The top selling countries are all non-western nations, who experience hot and humid temperatures. 
-- The hard cover and leatherette journal were popular products within European cities
-- The US overall, as well as within each American city were some of the largest consumers of products and had some of the highest amounts for top-selling products.
-- There are a number of cities and a few countries who did not purchase any products in order to have a top-selling product.
+The data reveals some interesting trends that can help in understanding the consumer behavior across different regions. The top-selling product across 22 cities were cotton t-shirts, but only among 5 countries. Interestingly, the top selling countries were all non-western nations, possibly due to the hot and humid climate in those regions. The hard cover and leatherette journals, on the other hand, emerged as popular products within European cities. The US market, both overall and within individual cities, showed significant consumer activity and a high demand for top-selling products. However, it is important to note that there were some cities and countries where no products were purchased, resulting in no top-selling product. 
+
+The insights gained from analyzing these trends could prove to be a valuable resource for businesses looking to create targeted marketing strategies and product offerings specific to certain city-regions. While there is still a need for more comprehensive data collection to draw conclusive insights about product preferences, one noticeable trend that emerges is that some of the more popular items, such as sport bottles and security cameras, are sold at a very low profit point. It is important to note that these products are commonly used as loss-leaders to attract customers to purchase supplementary products. However, further consideration may be required to evaluate whether these products are effectively driving overall sales and if a different strategy may be more effective.
 
 
 
@@ -876,8 +875,31 @@ Notable trends among data :
 
 SQL Queries:
 
+SQL Queries:
 
-Answer:
+SELECT all_sessions.city, 
+	SUM(product_sales_report.total_ordered * analytics.unit_price) AS revenue
+FROM all_sessions 
+	JOIN product_sales_report ON all_sessions.product_SKU = product_sales_report.product_SKU
+	JOIN analytics ON all_sessions.full_visitor_id = analytics.full_visitor_id 
+		AND all_sessions.visit_id = analytics.visit_id
+	WHERE all_sessions.city IS NOT NULL
+		   AND all_sessions.city != 'not available in demo dataset' 
+GROUP BY all_sessions.city
+ORDER BY revenue DESC;
+
+SELECT all_sessions.country, 
+	SUM(product_sales_report.total_ordered * analytics.unit_price) AS revenue
+FROM all_sessions 
+	JOIN product_sales_report ON all_sessions.product_SKU = product_sales_report.product_SKU
+	JOIN analytics ON all_sessions.full_visitor_id = analytics.full_visitor_id 
+		AND all_sessions.visit_id = analytics.visit_id
+	WHERE all_sessions.country IS NOT NULL
+		   AND all_sessions.country != 'not available in demo dataset' 
+GROUP BY all_sessions.country
+ORDER BY revenue DESC;
 
 
+Answer: 
 
+While examining the database, I found that the available data was not consistent enough to generate a comprehensive summary of revenue generated from each city and country. Unfortunately, a significant number of results were missing city or country information (returning as null or not available in demo dataset), which prevented me from drawing any meaningful conclusions. Therefore, it is imperative that additional steps are taken in the data collection process to ensure that customer location is accurately and consistently recorded. With more complete and reliable data, we can gain a deeper understanding of the ecommerce store's performance and make informed decisions to improve its revenue generation. 
