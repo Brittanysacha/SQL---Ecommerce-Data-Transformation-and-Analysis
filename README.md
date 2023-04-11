@@ -62,4 +62,4 @@ Finally, I had to prioritize completing each task to a sufficient level, and the
 
 
 ## Future Goals
-With more time I would have conducted a more throrough cleaning and analysis of the database. Although, I was able to remove exact duplicates from the table, there is still other data that could have been sythesized. 
+With more time I would have conducted a more throrough cleaning and analysis of the database. Although, I was able to remove exact duplicates from the table, there is still other data that could have been sythesized. Furthermore, I would aim to develop an improved action plan for the cleaning process, as I noticed that my approach could have been further optimized, potentially resulting in fewer steps required.
