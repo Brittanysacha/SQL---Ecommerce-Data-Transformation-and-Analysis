@@ -7,9 +7,9 @@ Answer the following questions and provide the SQL queries used to find the answ
 SQL Queries:
 
 SELECT all_sessions.city, 
-	SUM(sales_report.total_ordered * analytics.unit_price) AS revenue
+	SUM(product_sales_report.total_ordered * analytics.unit_price) AS revenue
 FROM all_sessions 
-	JOIN sales_report ON all_sessions.product_SKU = sales_report.product_SKU
+	JOIN product_sales_report ON all_sessions.product_SKU = product_sales_report.product_SKU
 	JOIN analytics ON all_sessions.full_visitor_id = analytics.full_visitor_id 
 		AND all_sessions.visit_id = analytics.visit_id
 	WHERE all_sessions.city IS NOT NULL
@@ -18,9 +18,9 @@ GROUP BY all_sessions.city
 ORDER BY revenue DESC;
 
 SELECT all_sessions.country, 
-	SUM(sales_report.total_ordered * analytics.unit_price) AS revenue
+	SUM(product_sales_report.total_ordered * analytics.unit_price) AS revenue
 FROM all_sessions 
-	JOIN sales_report ON all_sessions.product_SKU = sales_report.product_SKU
+	JOIN product_sales_report ON all_sessions.product_SKU = product_sales_report.product_SKU
 	JOIN analytics ON all_sessions.full_visitor_id = analytics.full_visitor_id 
 		AND all_sessions.visit_id = analytics.visit_id
 	WHERE all_sessions.country IS NOT NULL
@@ -31,18 +31,18 @@ ORDER BY revenue DESC;
 OR
 
 SELECT all_sessions.city, 
-	SUM((all_sessions.product_price/1000000) * sales_report.total_ordered) AS revenue
+	SUM((all_sessions.product_price/1000000) * product_sales_report.total_ordered) AS revenue
 FROM all_sessions 
-	JOIN sales_report ON all_sessions.product_SKU = sales_report.product_SKU
+	JOIN product_sales_report ON all_sessions.product_SKU = product_sales_report.product_SKU
 WHERE all_sessions.city IS NOT NULL
 	AND all_sessions.city != 'not available in demo dataset' 
 GROUP BY all_sessions.city
 ORDER BY revenue DESC;
 
 SELECT all_sessions.country, 
-	SUM((all_sessions.product_price/1000000) * sales_report.total_ordered) AS revenue
+	SUM((all_sessions.product_price/1000000) * product_sales_report.total_ordered) AS revenue
 FROM all_sessions 
-	JOIN sales_report ON all_sessions.product_SKU = sales_report.product_SKU
+	JOIN product_sales_report ON all_sessions.product_SKU = product_sales_report.product_SKU
 WHERE all_sessions.country IS NOT NULL
 	AND all_sessions.country != 'not available in demo dataset' 
 GROUP BY all_sessions.country
