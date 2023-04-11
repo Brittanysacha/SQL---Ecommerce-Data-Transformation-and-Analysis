@@ -45,7 +45,7 @@ The data from the Ecommerce store, does not look promising. Below are some highl
 
 - The purchasing trends across different regions and cities are diverse and offer valuable insights into the needs and preferences of customers. From stationary and school supplies in Asia-Pacific to hygiene and personal care products in South America, it is evident that different products appeal to different regions. While some regions show clear favorites in terms of top purchases, others demonstrate a more varied buying pattern.
 
-A significant proportion of purchases did not have a listed city or country associated with them, indicating a gap in the dataset. Addressing this gap in the future will provide a more comprehensive understanding of customer preferences and help tailor the product offerings to meet their needs better.
+- A significant proportion of purchases did not have a listed city or country associated with them, indicating a gap in the dataset. Addressing this gap in the future will provide a more comprehensive understanding of customer preferences and help tailor the product offerings to meet their needs better.
 
 - To optimize sales and improve customer satisfaction, it would be wise to refine the product selection based on popular regional preferences. By gradually scaling the business and expanding the product line based on consumer demand, the store could be made more manageable while keeping costs low. Strategic branding and targeted marketing of products to certain regions, including developing culturally relevant products, would also support future growth.- 
 
