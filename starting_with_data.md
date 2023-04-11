@@ -72,7 +72,7 @@ ORDER BY month;
 
 Answer:
 
-The website traffic was at its highest the first month the website was launched, and at its lowest the last month the data was tracked. This data indicates that the website is becoming increasingly less popular and indicates the marketing methods need to be reviewed. 
+The ecommerce website received its highest traffic of 1,833 visitors during its first month of launch in August 2016, while traffic was at its lowest with only 37 visitors in August 2017. This trend indicates a decreasing popularity of the website over time, suggesting that the marketing methods need to be re-evaluated and adjusted accordingly to increase website traffic.  
 
 DATE        TRAFFIC 
 2016-08     1833
@@ -93,7 +93,7 @@ DATE        TRAFFIC
 
 
 
-Question 5: 
+Question 5: How much revenue has the commerce store generated/per month since opening?
 
 SQL Queries:
 
