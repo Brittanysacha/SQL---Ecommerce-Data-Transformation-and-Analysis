@@ -1,33 +1,37 @@
-# Final-Project-Transforming-and-Analyzing-Dataupdate-with-SQL
+# E-commerce Database Transformation and Analysis
 
 ## Project/Goals
-* Set up, clean, and analyze the e-commerce database via SQL
-*  Understand different connections across datasets
-*  Pull information to answer EDA questions, as well as create queries to explore the data further. 
-* Conduct a QA walkthrough of the database to identify and mitigate risks within the data and think through the entire process of data cleaning, transformation, and analysis.
+
+- Set up, clean, and analyse the e-commerce database using SQL.
+- Understand different connections across datasets.
+- Pull information to answer exploratory data analysis (EDA) questions and create queries to further explore the data.
+- Conduct a QA walkthrough of the database to identify and mitigate risks within the data and consider the entire process of data cleaning, transformation, and analysis.
 
 ## Process
 
-At the beginning of the project, I created five tables and uploaded data from CSV documents. After this, I moved on to the data cleaning process, where I searched for a range of potential issues, including outliers, missing and incomplete data, duplicated entries, incorrect data types, and inconsistent formatting or naming conventions.
+During the project, I undertook the following steps:
 
-To identify outliers, I used statistical variance queries up to three degrees and imputed null values for any missing values. This helped me identify two outliers under the visit ID variable in the analytics table and 13,308 outliers under the unit price variable, which I noted down for reference.
- 
-Although the analysis did not have specific goals, I conducted a primary check for outliers before removing duplicates. I kept in mind that it might be necessary to re-check for outliers after removing duplicates since the statistical properties of the dataset can change.
- 
-During an initial review of the database, I noticed that the "sales_report" and "product" dataset variables appeared to be duplicated. To investigate, I executed a JOIN query between those two tables, which revealed that all variable names, except for an extra ratio column in the sales table, were a match. I then conducted an EXCEPT query to review duplication across the tables, revealing that there were 1009 entries in the "products" table that were not in the "sales_report" table, and 371 entries in the "sales_report" table that were not in the "products" table. I made a note to join these tables once further cleaning had been conducted.
- 
-The next step in the cleaning process was to remove non-significant variables with empty rows that could not be calculated using available information. Variables such as "total_transaction_revenue", "transactions", "session_quality_dim", "product_refund_amount", "product_quantity", "product_revenue", "item_revenue", "item_quantity", "transaction_revenue", "transaction_id", "search_keyword", and "ecommerce_action_option" from the "all_sessions" table appeared to return NULL values for all of their rows. Similarly, "units_sold", "revenue", "user_id", and "time_on_site" variables from the "analytics" table also had more than 95% NULL values, except for the "time_on_site" variable. Hence, I used a COUNT DISTINCT query to check for unique results for each variable. For the five variables from the "all_sessions" table that showed all NULL values, I dropped them using a DROP COLUMN command. For all the other variables that had more than one distinct value (NULL), I ran a COUNT IF NULL query to see how many of the total values were NULL. If the amount of NULL was greater than 70% then I removed them using a DROP COLUMN command.
+1. Created five tables and uploaded data from CSV documents.
+2. Carried out data cleaning, addressing various potential issues such as outliers, missing and incomplete data, duplicated entries, incorrect data types, and inconsistent formatting or naming conventions.
 
-The following step in the cleaning process was to remove all duplicates across each dataset. I removed duplicates within tables using three commands: CREATE TABLE with SELECT DISTINCT, DROP TABLE, and ALTER TABLE. I also reviewed and removed duplicates across rows. Since the sales_report and products tables had the same variables but contained different values, I joined the similar variables using a CREATE TABLE and UNION command. However, before doing so, I added a ratio variable to the products table to ensure a complete match with the sales_report table. Afterward, I dropped the original products table and sales_report table and renamed the resulting table as product_sales_report.
+   - Used statistical variance queries to identify outliers and imputed null values for missing data.
+   - Checked for outliers again after removing duplicates, recognising that the statistical properties of the dataset can change.
+   - Noticed duplication between the "sales_report" and "product" dataset variables. Executed a JOIN query between these tables and used an EXCEPT query to review duplication across tables.
+   - Removed non-significant variables with empty rows that couldn't be calculated using available information.
+   - Dropped variables that had more than 70% NULL values and retained variables with distinct values.
+   - Removed duplicates within tables using various commands.
+   - Joined similar variables from the "sales_report" and "products" tables, dropped the original tables, and renamed the resulting table.
+   - Rectified incorrect data types by dividing values in certain columns by 1,000,000.
+   - Standardised the formatting of variable titles to adhere to the word_word format and maintained lowercase consistency.
 
-Subsequently, I addressed any incorrect data types present in the dataset. Upon reviewing the analytics table and the all_sessions table, I discovered that the unit_price column and the product_price column respectively contained values that appeared to be in millions but actually represented a dollar value. To rectify this, I divided the values in these columns by 1,000,000.
+3. Identified further steps for data cleaning and enhancement:
 
-Finally, I standardized the formatting of all variable titles to adhere to the word_word format. If there were similar variables formatted differently under different tables, I corrected them. All variable titles and table names were kept in lower case to ensure consistency throughout the entire dataset.
+   - Join the "sales_by_sku" table with the "product_sales_report" table to consolidate duplicate variables.
+   - Restructure the collected data into meaningful categories, such as financial information, customer data, and product stock and warehouse information, to enhance the overall organisation of the database.
+   - Address formatting and duplicate issues, such as standardising the format of the "Date" variable and converting large "full_visitor_id" numbers to character strings.
+   - Conduct a thorough review of row values to eliminate duplicates among individual table values that may suggest an error in the overall database.
 
-With additional time for data cleaning, I would proceed by further joining the sales_by_sku table with the products_sales_reports table to consolidate the duplicate variables present in both tables. Additionally, I would recommend restructuring the collected data into more meaningful categories, such as financial information, customer data and information, and product stock and warehouse information, to enhance the overall organization of the database.
-
-Moreover, I would address further formatting and duplicate issues, such as standardizing the format of the Date variable under all_sessions to only include year/month/day without the time component. I would also convert the large full_visitor_id numbers from integers to character strings to ensure consistency in data type across the database. Furthermore, I would thoroughly review row values to eliminate duplicates among individual table values that may suggest an error in the overall database.
-
+These additional steps would further improve the data cleaning process and organisation of the e-commerce database, enhancing its quality and enabling more comprehensive analysis.
 
 ## Results
 The data from the Ecommerce store, does not look promising. Below are some highlights from data reviewed during analysis:
